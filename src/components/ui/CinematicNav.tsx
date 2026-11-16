@@ -6,12 +6,11 @@ import { cn } from "@/lib/cn";
 
 const NAV_ITEMS: Array<{ id: SceneId; label: string; group?: SceneId[] }> = [
   {
-    id: "strengths",
+    id: "partner",
     label: "Story",
-    group: ["threshold", "strengths", "markets", "prepare", "interview", "delivery"],
+    group: ["threshold", "partner", "markets", "interview", "delivery"],
   },
-  { id: "split", label: "Terms" },
-  { id: "chemistry", label: "Fit" },
+  { id: "split", label: "60/40" },
 ];
 
 export function CinematicNav() {
@@ -47,7 +46,7 @@ export function CinematicNav() {
                 className={cn(
                   "font-mono text-[11px] tracking-[0.22em] uppercase transition-colors",
                   active
-                    ? "text-[var(--color-tungsten)]"
+                    ? "text-[var(--color-signal)]"
                     : "text-white/55 hover:text-white/90",
                 )}
               >

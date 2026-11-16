@@ -31,12 +31,12 @@ export function SceneBackground() {
       <div
         className={cn(
           "absolute inset-0 opacity-80",
-          theme.atmosphere === "tungsten" && "bg-[radial-gradient(ellipse_at_30%_40%,rgba(201,162,126,0.18),transparent_55%)]",
-          theme.atmosphere === "daylight" && "bg-[radial-gradient(ellipse_at_70%_30%,rgba(123,163,184,0.16),transparent_55%)]",
-          theme.atmosphere === "paper" && "bg-[radial-gradient(ellipse_at_50%_50%,rgba(255,255,255,0.35),transparent_60%)]",
-          theme.atmosphere === "slate" && "bg-[radial-gradient(ellipse_at_40%_60%,rgba(90,255,170,0.06),transparent_50%)]",
-          theme.atmosphere === "amber" && "bg-[radial-gradient(ellipse_at_50%_20%,rgba(232,170,90,0.2),transparent_55%)]",
-          theme.atmosphere === "void" && "bg-[radial-gradient(ellipse_at_50%_40%,rgba(40,40,40,0.5),transparent_60%)]",
+          theme.atmosphere === "tungsten" && "bg-[radial-gradient(ellipse_at_30%_40%,rgba(212,165,116,0.16),transparent_55%)]",
+          theme.atmosphere === "daylight" && "bg-[radial-gradient(ellipse_at_70%_30%,rgba(142,182,201,0.16),transparent_55%)]",
+          theme.atmosphere === "navy" && "bg-[radial-gradient(ellipse_at_50%_40%,rgba(94,196,160,0.12),transparent_55%)]",
+          theme.atmosphere === "slate" && "bg-[radial-gradient(ellipse_at_40%_60%,rgba(94,196,160,0.06),transparent_50%)]",
+          theme.atmosphere === "amber" && "bg-[radial-gradient(ellipse_at_50%_20%,rgba(232,170,90,0.18),transparent_55%)]",
+          theme.atmosphere === "void" && "bg-[radial-gradient(ellipse_at_50%_40%,rgba(20,28,45,0.55),transparent_60%)]",
         )}
       />
       <div className="absolute inset-0 bg-[linear-gradient(to_bottom,rgba(0,0,0,0.35),transparent_20%,transparent_80%,rgba(0,0,0,0.45))]" />

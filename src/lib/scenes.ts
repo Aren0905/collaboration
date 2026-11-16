@@ -7,7 +7,7 @@ export type SceneTheme = {
   background: string;
   foreground: string;
   accent: string;
-  atmosphere: "void" | "tungsten" | "daylight" | "paper" | "slate" | "amber";
+  atmosphere: "void" | "tungsten" | "daylight" | "navy" | "slate" | "amber";
 };
 
 export const SCENE_THEMES: Record<SceneId, SceneTheme> = {
@@ -18,32 +18,25 @@ export const SCENE_THEMES: Record<SceneId, SceneTheme> = {
     accent: "var(--color-tungsten)",
     atmosphere: "void",
   },
-  strengths: {
-    id: "strengths",
+  partner: {
+    id: "partner",
     background: "var(--color-ink)",
-    foreground: "var(--color-paper)",
-    accent: "var(--color-tungsten)",
-    atmosphere: "tungsten",
-  },
-  markets: {
-    id: "markets",
-    background: "var(--color-ink-soft)",
     foreground: "var(--color-paper)",
     accent: "var(--color-daylight)",
     atmosphere: "daylight",
   },
-  prepare: {
-    id: "prepare",
-    background: "var(--color-slate)",
+  markets: {
+    id: "markets",
+    background: "var(--color-navy)",
     foreground: "var(--color-paper)",
-    accent: "var(--color-copper)",
-    atmosphere: "slate",
+    accent: "var(--color-signal)",
+    atmosphere: "navy",
   },
   interview: {
     id: "interview",
     background: "var(--color-amber-room)",
     foreground: "var(--color-paper)",
-    accent: "var(--color-tungsten)",
+    accent: "var(--color-daylight)",
     atmosphere: "amber",
   },
   delivery: {
@@ -59,13 +52,6 @@ export const SCENE_THEMES: Record<SceneId, SceneTheme> = {
     foreground: "var(--color-paper)",
     accent: "var(--color-copper)",
     atmosphere: "tungsten",
-  },
-  chemistry: {
-    id: "chemistry",
-    background: "var(--color-amber-room)",
-    foreground: "var(--color-paper)",
-    accent: "var(--color-tungsten)",
-    atmosphere: "amber",
   },
 };
 

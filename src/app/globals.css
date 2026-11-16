@@ -3,20 +3,21 @@
 :root {
   --story-progress: 0;
 
-  /* Documentary palette */
-  --color-void: #070708;
-  --color-ink: #101114;
-  --color-ink-soft: #16181d;
-  --color-ink-elevated: #1c1f26;
-  --color-slate: #12171c;
-  --color-paper: #f3efe6;
-  --color-paper-dim: #e7e0d2;
-  --color-paper-muted: #b9b2a6;
-  --color-tungsten: #c9a27e;
-  --color-daylight: #7ba3b8;
+  /* Cinematic navy / charcoal / daylight */
+  --color-void: #05070c;
+  --color-ink: #0b1018;
+  --color-ink-soft: #121826;
+  --color-ink-elevated: #1a2233;
+  --color-navy: #0a1424;
+  --color-slate: #101820;
+  --color-paper: #eef2f7;
+  --color-paper-dim: #d5dde8;
+  --color-paper-muted: #9aa8bb;
+  --color-tungsten: #d4a574;
+  --color-daylight: #8eb6c9;
   --color-copper: #b08a5c;
-  --color-signal: #7dcca3;
-  --color-amber-room: #1a140f;
+  --color-signal: #5ec4a0;
+  --color-amber-room: #15110e;
 
   --background: var(--color-void);
   --foreground: var(--color-paper);
@@ -33,6 +34,7 @@
   --color-ink: var(--color-ink);
   --color-ink-soft: var(--color-ink-soft);
   --color-ink-elevated: var(--color-ink-elevated);
+  --color-navy: var(--color-navy);
   --color-slate: var(--color-slate);
   --color-paper: var(--color-paper);
   --color-paper-dim: var(--color-paper-dim);
@@ -60,7 +62,7 @@
   }
 
   ::selection {
-    background: color-mix(in oklab, var(--color-tungsten) 45%, transparent);
+    background: color-mix(in oklab, var(--color-signal) 40%, transparent);
     color: var(--color-paper);
   }
 }
@@ -94,13 +96,12 @@
   animation: opening-scroll-pulse 2.4s ease-in-out infinite;
 }
 
-/* Illustrative revenue slider — restrained, not celebratory */
 .revenue-slider {
   height: 1.25rem;
 }
 
 .revenue-slider:focus-visible {
-  outline: 2px solid var(--color-copper);
+  outline: 2px solid var(--color-signal);
   outline-offset: 4px;
 }
 
@@ -110,8 +111,8 @@
     to right,
     var(--color-tungsten) 0%,
     var(--color-tungsten) var(--slider-progress, 0%),
-    rgba(243, 239, 230, 0.2) var(--slider-progress, 0%),
-    rgba(243, 239, 230, 0.2) 100%
+    rgba(238, 242, 247, 0.2) var(--slider-progress, 0%),
+    rgba(238, 242, 247, 0.2) 100%
   );
 }
 
@@ -129,7 +130,7 @@
 
 .revenue-slider::-moz-range-track {
   height: 2px;
-  background: rgba(243, 239, 230, 0.2);
+  background: rgba(238, 242, 247, 0.2);
 }
 
 .revenue-slider::-moz-range-progress {

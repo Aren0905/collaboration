@@ -23,12 +23,12 @@ const mono = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
-  title: `${SITE.title} · Collaboration flow`,
+  title: `${SITE.title} · I build. You lead conversations.`,
   description: SITE.description,
 };
 
 export const viewport: Viewport = {
-  themeColor: "#070708",
+  themeColor: "#05070c",
   colorScheme: "dark",
 };
 
