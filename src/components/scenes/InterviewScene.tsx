@@ -29,7 +29,7 @@ export function InterviewScene() {
     endMobile: "+=190%",
     scrubDesktop: 0.72,
     scrubMobile: 0.5,
-    build: ({ gsap: g, q, isDesktop }, tl) => {
+    build: ({ gsap: g, q, targets, isDesktop }, tl) => {
       const call = q("[data-film='call']");
       const code = q("[data-film='code']");
       const prep = q("[data-film='prep']");
@@ -37,6 +37,7 @@ export function InterviewScene() {
       const body = q("[data-film='body']");
       const beats = q("[data-film='beat']");
       const stamp = q("[data-film='stamp']");
+      const copy = targets(title, body);
 
       g.set(call, { scale: 1, opacity: 1 });
       g.set(code, {
@@ -45,11 +46,11 @@ export function InterviewScene() {
         scale: 1.2,
       });
       g.set(prep, { opacity: 0, y: 16 });
-      g.set([title, body], { opacity: 0, y: 20 });
+      g.set(copy, { opacity: 0, y: 20 });
       g.set(beats, { opacity: 0, y: 12 });
       g.set(stamp, { opacity: 0, scale: 0.9, rotate: -4 });
 
-      tl.to([title, body], { opacity: 1, y: 0, stagger: 0.08, duration: 0.45 }, 0);
+      tl.to(copy, { opacity: 1, y: 0, stagger: 0.08, duration: 0.45 }, 0);
       tl.to(prep, { opacity: 1, y: 0, duration: 0.45 }, 0.25);
       tl.to(beats, { opacity: 1, y: 0, stagger: 0.1, duration: 0.4 }, 0.55);
       tl.to(stamp, { opacity: 1, scale: 1, rotate: 0, duration: 0.4 }, 0.95);

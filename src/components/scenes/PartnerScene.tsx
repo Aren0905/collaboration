@@ -24,7 +24,7 @@ export function PartnerScene() {
     endMobile: "+=180%",
     scrubDesktop: 0.72,
     scrubMobile: 0.5,
-    build: ({ gsap: g, q, isDesktop }, tl) => {
+    build: ({ gsap: g, q, targets, isDesktop }, tl) => {
       const empty = q("[data-film='empty']");
       const partner = q("[data-film='partner']");
       const stage = q("[data-film='stage']");
@@ -32,6 +32,7 @@ export function PartnerScene() {
       const body = q("[data-film='body']");
       const hotspots = q("[data-film='hotspots']");
       const bridge = q("[data-film='bridge']");
+      const copy = targets(title, body);
 
       g.set(empty, { opacity: 1, scale: 1.06 });
       g.set(partner, {
@@ -39,12 +40,12 @@ export function PartnerScene() {
         clipPath: isDesktop ? "inset(0 0 0 100%)" : "inset(100% 0 0 0)",
       });
       g.set(stage, { rotateY: 0 });
-      g.set([title, body], { opacity: 0, y: 28 });
+      g.set(copy, { opacity: 0, y: 28 });
       g.set(hotspots, { opacity: 0, y: 16 });
       g.set(bridge, { scaleX: 0, opacity: 0, transformOrigin: "left center" });
 
       tl.to(empty, { scale: 1, duration: 0.55 }, 0);
-      tl.to([title, body], { opacity: 1, y: 0, stagger: 0.1, duration: 0.5 }, 0.2);
+      tl.to(copy, { opacity: 1, y: 0, stagger: 0.1, duration: 0.5 }, 0.2);
       tl.to(
         partner,
         { opacity: 1, clipPath: "inset(0% 0% 0% 0%)", duration: 1.15 },

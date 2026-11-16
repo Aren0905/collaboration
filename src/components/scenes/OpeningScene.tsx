@@ -27,7 +27,7 @@ export function OpeningScene() {
     endMobile: "+=160%",
     scrubDesktop: 0.7,
     scrubMobile: 0.5,
-    build: ({ gsap: g, q, isDesktop }, tl) => {
+    build: ({ gsap: g, q, targets, isDesktop }, tl) => {
       const plate = q("[data-film='plate']");
       const veil = q("[data-film='veil']");
       const signal = q("[data-film='signal']");
@@ -36,12 +36,13 @@ export function OpeningScene() {
       const meta = q("[data-film='meta']");
       const cta = q("[data-film='cta']");
       const aperture = q("[data-film='aperture']");
+      const copyBlock = targets(support, meta, cta);
 
       g.set(veil, { opacity: 1 });
       g.set(plate, { scale: 1.22, filter: "brightness(0.35)" });
       g.set(signal, { opacity: 0, scale: 0.86, y: 30 });
       g.set(lines, { opacity: 0, y: 36, rotateX: 12 });
-      g.set([support, meta, cta], { opacity: 0, y: 18 });
+      g.set(copyBlock, { opacity: 0, y: 18 });
       g.set(aperture, { scale: 0, opacity: 0 });
 
       tl.to(veil, { opacity: 0.08, duration: 0.85 }, 0);
@@ -79,7 +80,7 @@ export function OpeningScene() {
         1.85,
       );
       tl.to(aperture, { scale: 1, opacity: 0.9, duration: 0.7 }, 2.05);
-      tl.to([support, meta, cta, lines], { opacity: 0.35, duration: 0.5 }, 2.1);
+      tl.to(targets(support, meta, cta, lines), { opacity: 0.35, duration: 0.5 }, 2.1);
     },
   });
 

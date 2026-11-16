@@ -30,7 +30,7 @@ export function SplitScene() {
     endMobile: "+=140%",
     scrubDesktop: 0.65,
     scrubMobile: 0.45,
-    build: ({ gsap: g, q }, tl) => {
+    build: ({ gsap: g, q, targets }, tl) => {
       const trunk = q("[data-split='trunk']");
       const pathDev = q("[data-split='path-dev']");
       const pathPartner = q("[data-split='path-partner']");
@@ -39,17 +39,19 @@ export function SplitScene() {
       const body = q("[data-split='body']");
       const calc = q("[data-split='calc']");
       const bridge = q("[data-split='bridge']");
+      const paths = targets(trunk, pathDev, pathPartner);
+      const copy = targets(title, body);
 
-      g.set([trunk, pathDev, pathPartner], {
+      g.set(paths, {
         strokeDasharray: 1,
         strokeDashoffset: 1,
       });
       g.set(labels, { opacity: 0, y: 12 });
-      g.set([title, body], { opacity: 0, y: 18 });
+      g.set(copy, { opacity: 0, y: 18 });
       g.set(calc, { opacity: 0, y: 20 });
       g.set(bridge, { scaleX: 0, opacity: 0, transformOrigin: "center" });
 
-      tl.to([title, body], { opacity: 1, y: 0, stagger: 0.08, duration: 0.45 }, 0);
+      tl.to(copy, { opacity: 1, y: 0, stagger: 0.08, duration: 0.45 }, 0);
       tl.to(trunk, { strokeDashoffset: 0, duration: 0.6 }, 0.2);
       tl.to(pathDev, { strokeDashoffset: 0, duration: 0.7 }, 0.55);
       tl.to(pathPartner, { strokeDashoffset: 0, duration: 0.7 }, 0.55);

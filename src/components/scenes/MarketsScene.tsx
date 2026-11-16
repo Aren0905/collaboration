@@ -24,20 +24,21 @@ export function MarketsScene() {
     endMobile: "+=180%",
     scrubDesktop: 0.7,
     scrubMobile: 0.5,
-    build: ({ gsap: g, q, isDesktop }, tl) => {
+    build: ({ gsap: g, q, targets, isDesktop }, tl) => {
       const map = q("[data-film='map']");
       const beats = q("[data-film='beat']");
       const card = q("[data-film='card']");
       const title = q("[data-film='title']");
       const body = q("[data-film='body']");
+      const copy = targets(title, body);
 
       g.set(map, { scale: 1.25, filter: "brightness(0.45)" });
       g.set(beats, { opacity: 0, x: isDesktop ? -20 : 0, y: isDesktop ? 0 : 16 });
       g.set(card, { opacity: 0, y: 40, rotateX: 18, transformOrigin: "50% 100%" });
-      g.set([title, body], { opacity: 0, y: 20 });
+      g.set(copy, { opacity: 0, y: 20 });
 
       tl.to(map, { scale: 1, filter: "brightness(1)", duration: 1.1 }, 0);
-      tl.to([title, body], { opacity: 1, y: 0, stagger: 0.08, duration: 0.45 }, 0.25);
+      tl.to(copy, { opacity: 1, y: 0, stagger: 0.08, duration: 0.45 }, 0.25);
       tl.to(
         beats,
         { opacity: 1, x: 0, y: 0, stagger: 0.14, duration: 0.45 },

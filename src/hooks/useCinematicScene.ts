@@ -10,9 +10,28 @@ export type CinematicBuildContext = {
   root: HTMLElement;
   pin: HTMLElement;
   q: ReturnType<typeof gsap.utils.selector>;
+  /** Flatten nested gsap.utils.selector() results into a single tweenable list. */
+  targets: (...groups: gsap.TweenTarget[]) => gsap.TweenTarget[];
   isDesktop: boolean;
   reduceMotion: boolean;
 };
+
+function flattenTargets(...groups: gsap.TweenTarget[]): gsap.TweenTarget[] {
+  const out: gsap.TweenTarget[] = [];
+  for (const group of groups) {
+    if (group == null) continue;
+    if (typeof group === "string" || group instanceof Element) {
+      out.push(group);
+      continue;
+    }
+    if (typeof group === "object" && "length" in (group as object)) {
+      out.push(...Array.from(group as ArrayLike<gsap.TweenTarget>));
+      continue;
+    }
+    out.push(group);
+  }
+  return out;
+}
 
 export type CinematicTimeline = gsap.core.Timeline;
 
@@ -87,6 +106,7 @@ export function useCinematicScene({
           root,
           pin,
           q,
+          targets: flattenTargets,
           isDesktop,
           reduceMotion,
         };
