@@ -7,7 +7,6 @@ import { ReducedMotionStory } from "@/components/experience/ReducedMotionStory";
 import { CinematicNav } from "@/components/ui/CinematicNav";
 import { SkipLink } from "@/components/ui/SkipLink";
 import { SignalRail } from "@/components/cinematic/SignalRail";
-import { SoundToggle } from "@/components/cinematic/SoundToggle";
 import { OpeningScene } from "@/components/scenes/OpeningScene";
 import { PartnerScene } from "@/components/scenes/PartnerScene";
 import { MarketsScene } from "@/components/scenes/MarketsScene";
@@ -35,7 +34,6 @@ function ExperienceInner() {
       <SceneBackground />
       <CinematicNav />
       <SignalRail />
-      <SoundToggle />
       <main id="experience" className="relative">
         <OpeningScene />
         <PartnerScene />

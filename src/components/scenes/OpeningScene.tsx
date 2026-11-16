@@ -42,22 +42,23 @@ export function OpeningScene() {
       const aperture = q("[data-film='aperture']");
       const copyBlock = targets(support, meta, cta);
 
-      g.set(veil, { opacity: 1 });
-      g.set(plate, { scale: 1.22, filter: "brightness(0.35)" });
+      // Start barely visible — presence sensed, not fully seen
+      g.set(veil, { opacity: 0.58 });
+      g.set(plate, { scale: 1.14, filter: "brightness(0.55)" });
       g.set(toast, { opacity: 0, scale: 0.88, y: 28 });
       g.set(brief, { opacity: 0, scale: 0.92, y: 40, transformOrigin: "50% 0%" });
       g.set(lines, { opacity: 0, y: 36, rotateX: 12 });
       g.set(copyBlock, { opacity: 0, y: 18 });
       g.set(aperture, { scale: 0, opacity: 0 });
 
-      // Arrive at workspace
-      tl.to(veil, { opacity: 0.1, duration: 0.7 }, 0);
+      // Reveal into a readable workspace
+      tl.to(veil, { opacity: 0.08, duration: 0.85 }, 0);
       tl.to(
         plate,
         {
           scale: isDesktop ? 1.06 : 1.1,
           filter: "brightness(1)",
-          duration: 1.1,
+          duration: 1.15,
         },
         0,
       );
@@ -120,13 +121,13 @@ export function OpeningScene() {
             src={FILM_ASSETS.developerNight.src}
             alt={FILM_ASSETS.developerNight.alt}
             priority
-            overlay="heavy"
+            overlay="soft"
           />
         </div>
 
         <div
           data-film="veil"
-          className="pointer-events-none absolute inset-0 z-[2] bg-[var(--color-void)]"
+          className="pointer-events-none absolute inset-0 z-[2] bg-[radial-gradient(ellipse_at_58%_40%,rgba(5,7,12,0.35)_0%,rgba(5,7,12,0.72)_48%,rgba(5,7,12,0.9)_100%)] opacity-[0.58]"
           aria-hidden
         />
 

@@ -146,7 +146,7 @@ export function InterviewScene() {
             data-film="title"
             className="font-display text-[clamp(1.55rem,3.6vw,2.6rem)] leading-[1.1] text-white"
           >
-            You tak the conversation.
+            You take the conversation.
             <span className="mt-1 block text-[var(--color-daylight)]">
               I support the technical preparation.
             </span>
