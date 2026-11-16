@@ -1,43 +1,49 @@
 /** Photoreal film plates for THE CONNECTION. */
 export const FILM_ASSETS = {
   developerNight: {
-    src: "/images/dev-night-24.jpg",
+    src: "/images/01-developer-night.jpg",
     alt: "Aaron, a 24-year-old software developer, working late in a navy sweatshirt at his desk",
     width: 1920,
     height: 1080,
   },
   emptyChair: {
-    src: "/images/dev-empty-24.jpg",
+    src: "/images/02-empty-chair.jpg",
     alt: "Developer workspace with an empty second chair for a communication partner",
     width: 1920,
     height: 1080,
   },
   partnerDay: {
-    src: "/images/partner-english-man.jpg",
+    src: "/images/03-partner-daylight.jpg",
     alt: "English-speaking male communication partner in a bright daylight home office",
     width: 1920,
     height: 1080,
   },
   worldMap: {
-    src: "/images/world-map-signal.jpg",
+    src: "/images/04-world-map.jpg",
     alt: "Cinematic world map with United States and United Kingdom illuminated",
     width: 1920,
     height: 1080,
   },
   interview: {
-    src: "/images/partner-english-man.jpg",
-    alt: "English-speaking male communication partner prepared for a professional video interview",
+    src: "/images/05-interview-laptop.jpg",
+    alt: "Laptop video call with an English-speaking communication partner ready for interview",
     width: 1920,
     height: 1080,
   },
   coding: {
-    src: "/images/dev-coding-24.jpg",
+    src: "/images/06-developer-coding.jpg",
     alt: "Aaron coding a web application in a charcoal hoodie at dual monitors",
     width: 1920,
     height: 1080,
   },
+  deliveryBuild: {
+    src: "/images/08-delivery-build.jpg",
+    alt: "Aaron reviewing a finished web application dashboard at his night desk",
+    width: 1920,
+    height: 1080,
+  },
   sharedProject: {
-    src: "/images/shared-dual-24.jpg",
+    src: "/images/07-shared-dual.jpg",
     alt: "Developer and communication partner workspaces linked by one project Signal",
     width: 1920,
     height: 1080,

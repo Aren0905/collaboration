@@ -74,12 +74,12 @@ export function DeliveryScene() {
           <FilmPlate
             src={
               view === "dev"
-                ? FILM_ASSETS.coding.src
+                ? FILM_ASSETS.deliveryBuild.src
                 : FILM_ASSETS.sharedProject.src
             }
             alt={
               view === "dev"
-                ? FILM_ASSETS.coding.alt
+                ? FILM_ASSETS.deliveryBuild.alt
                 : FILM_ASSETS.sharedProject.alt
             }
             overlay="bottom"
