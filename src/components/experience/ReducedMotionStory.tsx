@@ -4,15 +4,20 @@ import {
   DELIVERY_TIMELINE,
   INTERVIEW_BEATS,
   MARKET_BEATS,
+  OUTREACH_STEPS,
   PREP_STEPS,
-  ROLE_CREDITS,
   SCENES,
   SITE,
 } from "@/lib/content";
+import { BUILD_STEPS, STORY_PROJECT } from "@/lib/project";
 import { EXAMPLE_REVENUE_DEFAULT, formatUSD, splitRevenue } from "@/lib/revenue";
+import { RoleExplorer } from "@/components/sim/RoleExplorer";
+import { ProjectBrief } from "@/components/sim/ProjectBrief";
 
 export function ReducedMotionStory() {
-  const split = splitRevenue(EXAMPLE_REVENUE_DEFAULT);
+  const split = splitRevenue(
+    STORY_PROJECT.budgetExample || EXAMPLE_REVENUE_DEFAULT,
+  );
 
   return (
     <article
@@ -30,6 +35,9 @@ export function ReducedMotionStory() {
         <p className="text-sm text-white/55">
           Developer 60% · Communication partner 40%. Transparent roles.
         </p>
+        <div className="pt-4">
+          <ProjectBrief />
+        </div>
       </header>
 
       <ol className="space-y-12">
@@ -41,24 +49,29 @@ export function ReducedMotionStory() {
             <h2 className="font-display text-2xl md:text-3xl">{scene.title}</h2>
             <p className="text-white/70">{scene.body}</p>
 
-            {scene.id === "partner" ? (
-              <div className="grid gap-6 pt-4 sm:grid-cols-2">
-                <RoleBlock {...ROLE_CREDITS.technical} />
-                <RoleBlock {...ROLE_CREDITS.communication} />
-              </div>
-            ) : null}
-
             {scene.id === "markets" ? (
-              <ul className="space-y-3 pt-2">
-                {MARKET_BEATS.map((beat) => (
-                  <li key={beat.id} className="text-white/70">
-                    <span className="font-mono text-[var(--color-signal)]">
-                      {beat.index} · {beat.title}
-                    </span>{" "}
-                    {beat.detail}
-                  </li>
-                ))}
-              </ul>
+              <div className="space-y-4 pt-2">
+                <ul className="space-y-3">
+                  {MARKET_BEATS.map((beat) => (
+                    <li key={beat.id} className="text-white/70">
+                      <span className="font-mono text-[var(--color-signal)]">
+                        {beat.index} · {beat.title}
+                      </span>{" "}
+                      {beat.detail}
+                    </li>
+                  ))}
+                </ul>
+                <ul className="space-y-2">
+                  {OUTREACH_STEPS.map((step) => (
+                    <li key={step.id} className="text-white/70">
+                      <span className="text-[var(--color-tungsten)]">
+                        {step.label}
+                      </span>
+                      : {step.detail}
+                    </li>
+                  ))}
+                </ul>
+              </div>
             ) : null}
 
             {scene.id === "interview" ? (
@@ -88,6 +101,14 @@ export function ReducedMotionStory() {
 
             {scene.id === "delivery" ? (
               <ul className="space-y-2 pt-2">
+                {BUILD_STEPS.map((step) => (
+                  <li key={step.id} className="text-white/70">
+                    <span className="text-[var(--color-signal)]">
+                      {step.label}
+                    </span>
+                    : {step.detail}
+                  </li>
+                ))}
                 {DELIVERY_TIMELINE.map((step) => (
                   <li key={step.id} className="text-white/70">
                     <span className="text-[var(--color-signal)]">
@@ -99,37 +120,36 @@ export function ReducedMotionStory() {
               </ul>
             ) : null}
 
+            {scene.id === "change" ? (
+              <div className="space-y-2 pt-2 text-white/70">
+                <p>
+                  Client: &ldquo;{STORY_PROJECT.changeRequest.message}&rdquo;
+                </p>
+                <p>Partner clarifies: {STORY_PROJECT.changeRequest.clarified}</p>
+                <p>Developer ships: {STORY_PROJECT.changeRequest.implemented}</p>
+                <p>Client: {STORY_PROJECT.changeRequest.approved}</p>
+              </div>
+            ) : null}
+
             {scene.id === "split" ? (
-              <p className="pt-2 text-sm text-white/55">
-                Example {formatUSD(EXAMPLE_REVENUE_DEFAULT)} → Developer{" "}
-                {formatUSD(split.developer)} · Partner{" "}
-                {formatUSD(split.partner)}. Illustrative only.
-              </p>
+              <div className="space-y-6 pt-2">
+                <p className="text-sm text-white/55">
+                  Example {formatUSD(STORY_PROJECT.budgetExample)} → Developer{" "}
+                  {formatUSD(split.developer)} · Partner{" "}
+                  {formatUSD(split.partner)}. Illustrative only.
+                </p>
+                <RoleExplorer />
+                <a
+                  href={`mailto:${SITE.email}`}
+                  className="inline-block border border-white/30 px-4 py-2 font-mono text-[11px] tracking-[0.18em] uppercase"
+                >
+                  Email Aaron
+                </a>
+              </div>
             ) : null}
           </li>
         ))}
       </ol>
     </article>
-  );
-}
-
-function RoleBlock({
-  title,
-  lines,
-}: {
-  title: string;
-  lines: readonly string[];
-}) {
-  return (
-    <div>
-      <h3 className="font-mono text-[11px] tracking-[0.2em] text-[var(--color-copper)] uppercase">
-        {title}
-      </h3>
-      <ul className="mt-2 space-y-1 text-sm text-white/70">
-        {lines.map((line) => (
-          <li key={line}>{line}</li>
-        ))}
-      </ul>
-    </div>
   );
 }

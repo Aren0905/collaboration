@@ -3,51 +3,81 @@
 import { useRef, useState } from "react";
 import { useCinematicScene } from "@/hooks/useCinematicScene";
 import { FilmPlate } from "@/components/cinematic/FilmPlate";
-import { FILM_ASSETS } from "@/lib/assets";
+import { CodeEditorFrame } from "@/components/sim/CodeEditorFrame";
 import {
-  DELIVERY_TIMELINE,
-  DEV_PIPELINE,
-  PARTNER_PIPELINE,
-  SCENES,
-} from "@/lib/content";
+  CustomerDashboard,
+  type DashboardStage,
+} from "@/components/sim/CustomerDashboard";
+import { FILM_ASSETS } from "@/lib/assets";
+import { BUILD_STEPS } from "@/lib/project";
+import { SCENES } from "@/lib/content";
 import { cn } from "@/lib/cn";
 
 const content = SCENES.find((s) => s.id === "delivery")!;
 
 /**
- * Scene 5 — Dual synchronized timelines + perspective switch.
+ * Event 5 — Live software build.
+ * IDE + progressive React dashboard: blank → nav → table → charts → tests.
  */
 export function DeliveryScene() {
   const rootRef = useRef<HTMLElement>(null);
   const pinRef = useRef<HTMLDivElement>(null);
-  const [view, setView] = useState<"both" | "dev" | "partner">("both");
+  const [stage, setStage] = useState<DashboardStage>(0);
+  const [codeLines, setCodeLines] = useState(3);
 
   useCinematicScene({
     id: "delivery",
     rootRef,
     pinRef,
-    endDesktop: "+=240%",
-    endMobile: "+=170%",
+    endDesktop: "+=340%",
+    endMobile: "+=240%",
     scrubDesktop: 0.7,
     scrubMobile: 0.5,
     build: ({ gsap: g, q }, tl) => {
       const plate = q("[data-film='plate']");
+      const ide = q("[data-film='ide']");
+      const dash = q("[data-film='dash']");
       const title = q("[data-film='title']");
-      const rails = q("[data-film='rail']");
-      const nodes = q("[data-film='node']");
-      const filament = q("[data-film='filament']");
+      const steps = q("[data-film='step']");
+      const body = q("[data-film='body']");
 
-      g.set(plate, { scale: 1.12, opacity: 0.65 });
-      g.set(title, { opacity: 0, y: 24 });
-      g.set(rails, { opacity: 0, y: 18 });
-      g.set(nodes, { opacity: 0, y: 14 });
-      g.set(filament, { scaleX: 0, opacity: 0, transformOrigin: "left center" });
+      g.set(plate, { opacity: 0.45, scale: 1.08 });
+      g.set(ide, { opacity: 0, y: 28, rotateX: 8 });
+      g.set(dash, { opacity: 0, y: 36, scale: 0.96 });
+      g.set(title, { opacity: 0, y: 22 });
+      g.set(body, { opacity: 0, y: 16 });
+      g.set(steps, { opacity: 0.25 });
 
-      tl.to(plate, { scale: 1, opacity: 1, duration: 0.8 }, 0);
-      tl.to(title, { opacity: 1, y: 0, duration: 0.45 }, 0.2);
-      tl.to(rails, { opacity: 1, y: 0, stagger: 0.12, duration: 0.45 }, 0.45);
-      tl.to(nodes, { opacity: 1, y: 0, stagger: 0.1, duration: 0.4 }, 0.85);
-      tl.to(filament, { scaleX: 1, opacity: 1, duration: 0.7 }, 1.45);
+      tl.to(plate, { opacity: 0.7, scale: 1, duration: 0.6 }, 0);
+      tl.to(title, { opacity: 1, y: 0, duration: 0.4 }, 0.1);
+      tl.to(body, { opacity: 1, y: 0, duration: 0.35 }, 0.25);
+      tl.to(ide, { opacity: 1, y: 0, rotateX: 0, duration: 0.55 }, 0.35);
+      tl.to(dash, { opacity: 1, y: 0, scale: 1, duration: 0.55 }, 0.55);
+
+      // Progressive build beats
+      tl.call(() => {
+        setStage(1);
+        setCodeLines(5);
+      }, undefined, 0.85);
+      tl.to(steps, { opacity: 1, stagger: 0.4, duration: 0.3 }, 0.85);
+
+      tl.call(() => {
+        setStage(2);
+        setCodeLines(7);
+      }, undefined, 1.25);
+
+      tl.call(() => {
+        setStage(3);
+        setCodeLines(9);
+      }, undefined, 1.7);
+
+      tl.call(() => {
+        setStage(4);
+        setCodeLines(10);
+      }, undefined, 2.15);
+
+      tl.to(dash, { scale: 1.03, duration: 0.5 }, 2.4);
+      tl.to(ide, { opacity: 0.55, duration: 0.45 }, 2.45);
     },
   });
 
@@ -63,121 +93,64 @@ export function DeliveryScene() {
         ref={pinRef}
         className="relative flex h-[100svh] w-full items-end overflow-hidden bg-[var(--color-ink)] md:items-center"
       >
-        <div
-          data-film="plate"
-          className={cn(
-            "absolute inset-0 will-change-transform transition-[clip-path] duration-500",
-            view === "dev" && "md:[clip-path:inset(0_45%_0_0)]",
-            view === "partner" && "md:[clip-path:inset(0_0_0_45%)]",
-          )}
-        >
+        <div data-film="plate" className="absolute inset-0 will-change-transform">
           <FilmPlate
-            src={
-              view === "dev"
-                ? FILM_ASSETS.deliveryBuild.src
-                : FILM_ASSETS.sharedProject.src
-            }
-            alt={
-              view === "dev"
-                ? FILM_ASSETS.deliveryBuild.alt
-                : FILM_ASSETS.sharedProject.alt
-            }
+            src={FILM_ASSETS.coding.src}
+            alt={FILM_ASSETS.coding.alt}
             overlay="bottom"
           />
         </div>
 
-        <div className="relative z-[5] w-full px-5 pb-14 md:px-10 md:pb-16 lg:px-16">
-          <div className="mx-auto max-w-5xl">
+        <div className="relative z-[5] grid w-full gap-5 px-5 pb-12 md:grid-cols-[0.9fr_1.1fr] md:items-end md:gap-8 md:px-10 md:pb-14 lg:px-16">
+          <div>
             <p className="font-mono text-[10px] tracking-[0.28em] text-[var(--color-signal)] uppercase">
               {content.eyebrow}
             </p>
             <h2
               id="scene-delivery-title"
               data-film="title"
-              className="mt-3 max-w-3xl font-display text-[clamp(1.55rem,3.6vw,2.7rem)] leading-[1.1] text-white"
+              className="mt-3 max-w-xl font-display text-[clamp(1.55rem,3.6vw,2.6rem)] leading-[1.1] text-white"
             >
-              You handle communication.
-              <span className="block">I handle development.</span>
-              <span className="block text-[var(--color-signal)]">
-                We deliver together.
-              </span>
+              {content.title}
             </h2>
+            <p data-film="body" className="mt-3 max-w-md text-sm text-white/70">
+              {content.body}
+            </p>
 
-            <div
-              className="mt-5 flex flex-wrap gap-2"
-              role="group"
-              aria-label="Perspective"
-            >
-              {(
-                [
-                  ["both", "Both rooms"],
-                  ["dev", "Developer view"],
-                  ["partner", "Partner view"],
-                ] as const
-              ).map(([id, label]) => (
-                <button
-                  key={id}
-                  type="button"
-                  onClick={() => setView(id)}
-                  className={cn(
-                    "border px-3 py-1.5 font-mono text-[10px] tracking-[0.16em] uppercase",
-                    view === id
-                      ? "border-[var(--color-signal)] text-[var(--color-signal)]"
-                      : "border-white/20 text-white/50 hover:text-white",
-                  )}
-                >
-                  {label}
-                </button>
-              ))}
-            </div>
-
-            <div className="mt-8 grid gap-4 md:grid-cols-2">
-              <div
-                data-film="rail"
-                className="border border-[var(--color-tungsten)]/30 bg-black/45 p-4 backdrop-blur-sm"
-              >
-                <p className="font-mono text-[9px] tracking-[0.2em] text-[var(--color-tungsten)] uppercase">
-                  Developer timeline
-                </p>
-                <p className="mt-2 text-sm text-white/70">
-                  {DEV_PIPELINE.join(" → ")}
-                </p>
-              </div>
-              <div
-                data-film="rail"
-                className="border border-[var(--color-daylight)]/30 bg-black/45 p-4 backdrop-blur-sm"
-              >
-                <p className="font-mono text-[9px] tracking-[0.2em] text-[var(--color-daylight)] uppercase">
-                  Partner timeline
-                </p>
-                <p className="mt-2 text-sm text-white/70">
-                  {PARTNER_PIPELINE.join(" → ")}
-                </p>
-              </div>
-            </div>
-
-            <ol className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
-              {DELIVERY_TIMELINE.map((step) => (
+            <ol className="mt-6 space-y-2">
+              {BUILD_STEPS.map((step, i) => (
                 <li
                   key={step.id}
-                  data-film="node"
-                  className="border border-white/15 bg-black/50 p-3 backdrop-blur-sm"
+                  data-film="step"
+                  className={cn(
+                    "flex items-baseline gap-3 border-l pl-3",
+                    stage > i
+                      ? "border-[var(--color-signal)]"
+                      : "border-white/20",
+                  )}
                 >
-                  <p className="font-mono text-[10px] tracking-[0.16em] text-[var(--color-signal)] uppercase">
-                    {step.label}
-                  </p>
-                  <p className="mt-1 text-xs text-white/65">{step.detail}</p>
+                  <span className="font-mono text-[10px] tracking-[0.16em] text-[var(--color-signal)] uppercase">
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                  <span>
+                    <span className="text-sm text-white/85">{step.label}</span>
+                    <span className="ml-2 text-xs text-white/40">
+                      {step.detail}
+                    </span>
+                  </span>
                 </li>
               ))}
             </ol>
 
-            <div
-              data-film="filament"
-              className="mt-8 h-1 w-full bg-gradient-to-r from-[var(--color-tungsten)] via-[var(--color-signal)] to-[var(--color-daylight)]"
-              aria-hidden
-            />
-            <p className="mt-3 font-mono text-[10px] tracking-[0.2em] text-white/40 uppercase">
-              Completed project becomes the revenue Signal
+            <div data-film="ide" className="mt-6 will-change-transform">
+              <CodeEditorFrame visibleLines={codeLines} />
+            </div>
+          </div>
+
+          <div data-film="dash" className="will-change-transform">
+            <CustomerDashboard stage={stage} />
+            <p className="mt-3 font-mono text-[9px] tracking-[0.16em] text-white/35 uppercase">
+              Live UI simulation · not a screenshot
             </p>
           </div>
         </div>

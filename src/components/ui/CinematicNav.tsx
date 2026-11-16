@@ -8,7 +8,14 @@ const NAV_ITEMS: Array<{ id: SceneId; label: string; group?: SceneId[] }> = [
   {
     id: "partner",
     label: "Film",
-    group: ["threshold", "partner", "markets", "interview", "delivery"],
+    group: [
+      "threshold",
+      "partner",
+      "markets",
+      "interview",
+      "delivery",
+      "change",
+    ],
   },
   { id: "split", label: "60/40" },
 ];

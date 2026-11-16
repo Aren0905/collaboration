@@ -10,6 +10,7 @@ const ORDER: SceneId[] = [
   "markets",
   "interview",
   "delivery",
+  "change",
   "split",
 ];
 

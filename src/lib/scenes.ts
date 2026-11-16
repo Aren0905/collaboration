@@ -46,6 +46,13 @@ export const SCENE_THEMES: Record<SceneId, SceneTheme> = {
     accent: "var(--color-signal)",
     atmosphere: "tungsten",
   },
+  change: {
+    id: "change",
+    background: "var(--color-ink-soft)",
+    foreground: "var(--color-paper)",
+    accent: "var(--color-daylight)",
+    atmosphere: "daylight",
+  },
   split: {
     id: "split",
     background: "var(--color-ink)",

@@ -13,6 +13,7 @@ import { PartnerScene } from "@/components/scenes/PartnerScene";
 import { MarketsScene } from "@/components/scenes/MarketsScene";
 import { InterviewScene } from "@/components/scenes/InterviewScene";
 import { DeliveryScene } from "@/components/scenes/DeliveryScene";
+import { ChangeScene } from "@/components/scenes/ChangeScene";
 import { SplitScene } from "@/components/scenes/SplitScene";
 
 function ExperienceInner() {
@@ -41,6 +42,7 @@ function ExperienceInner() {
         <MarketsScene />
         <InterviewScene />
         <DeliveryScene />
+        <ChangeScene />
         <SplitScene />
       </main>
     </>

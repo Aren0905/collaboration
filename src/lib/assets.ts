@@ -1,3 +1,5 @@
+import { STORY_PROJECT } from "@/lib/project";
+
 /** Photoreal film plates for THE CONNECTION. */
 export const FILM_ASSETS = {
   developerNight: {
@@ -56,10 +58,10 @@ export const FILM_ASSETS = {
   },
 } as const;
 
-/** Fictional example project used as the film’s through-line. */
+/** Thin alias for the persistent story project. Prefer STORY_PROJECT. */
 export const EXAMPLE_PROJECT = {
-  label: "Illustrative example · not a live opening",
-  client: "US-based product team",
-  title: "Remote web application build",
-  scope: "Small software team · transparent collaboration",
+  label: STORY_PROJECT.label,
+  client: STORY_PROJECT.client,
+  title: STORY_PROJECT.title,
+  scope: STORY_PROJECT.stack.join(" · "),
 } as const;

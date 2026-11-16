@@ -4,13 +4,15 @@ import { useRef } from "react";
 import { useCinematicScene } from "@/hooks/useCinematicScene";
 import { FilmPlate } from "@/components/cinematic/FilmPlate";
 import { Hotspot } from "@/components/cinematic/Hotspot";
+import { ProjectBrief } from "@/components/sim/ProjectBrief";
 import { FILM_ASSETS } from "@/lib/assets";
-import { ROLE_CREDITS, SCENES } from "@/lib/content";
+import { SCENES } from "@/lib/content";
 
 const content = SCENES.find((s) => s.id === "partner")!;
 
 /**
- * Scene 2 — Empty chair → partner daylight → rooms align into one office.
+ * Event 2 — The missing partner.
+ * Empty chair → camera pullback → daylight room reveal → desks connect.
  */
 export function PartnerScene() {
   const rootRef = useRef<HTMLElement>(null);
@@ -20,8 +22,8 @@ export function PartnerScene() {
     id: "partner",
     rootRef,
     pinRef,
-    endDesktop: "+=280%",
-    endMobile: "+=180%",
+    endDesktop: "+=300%",
+    endMobile: "+=200%",
     scrubDesktop: 0.72,
     scrubMobile: 0.5,
     build: ({ gsap: g, q, targets, isDesktop }, tl) => {
@@ -32,35 +34,49 @@ export function PartnerScene() {
       const body = q("[data-film='body']");
       const hotspots = q("[data-film='hotspots']");
       const bridge = q("[data-film='bridge']");
+      const capDev = q("[data-film='cap-dev']");
+      const capPartner = q("[data-film='cap-partner']");
+      const brief = q("[data-film='brief']");
       const copy = targets(title, body);
 
-      g.set(empty, { opacity: 1, scale: 1.06 });
+      g.set(empty, { opacity: 1, scale: 1.12 });
       g.set(partner, {
         opacity: 0,
         clipPath: isDesktop ? "inset(0 0 0 100%)" : "inset(100% 0 0 0)",
       });
-      g.set(stage, { rotateY: 0 });
+      g.set(stage, { rotateY: 0, scale: 1.04 });
       g.set(copy, { opacity: 0, y: 28 });
       g.set(hotspots, { opacity: 0, y: 16 });
       g.set(bridge, { scaleX: 0, opacity: 0, transformOrigin: "left center" });
+      g.set(capDev, { opacity: 0, x: -12 });
+      g.set(capPartner, { opacity: 0, x: 12 });
+      g.set(brief, { opacity: 0, y: 16 });
 
-      tl.to(empty, { scale: 1, duration: 0.55 }, 0);
-      tl.to(copy, { opacity: 1, y: 0, stagger: 0.1, duration: 0.5 }, 0.2);
+      // Pull back from empty chair
+      tl.to(empty, { scale: 1, duration: 0.7 }, 0);
+      tl.to(stage, { scale: 1, duration: 0.7 }, 0);
+      tl.to(copy, { opacity: 1, y: 0, stagger: 0.1, duration: 0.5 }, 0.25);
+      tl.to(brief, { opacity: 1, y: 0, duration: 0.4 }, 0.45);
+
+      // Second room reveals
       tl.to(
         partner,
-        { opacity: 1, clipPath: "inset(0% 0% 0% 0%)", duration: 1.15 },
-        0.55,
+        { opacity: 1, clipPath: "inset(0% 0% 0% 0%)", duration: 1.2 },
+        0.7,
       );
-      tl.to(empty, { opacity: 0.2, duration: 0.8 }, 0.7);
-      tl.to(hotspots, { opacity: 1, y: 0, duration: 0.45 }, 1.25);
-      // Surprise: rooms rotate/align as one shared office
+      tl.to(empty, { opacity: 0.35, duration: 0.85 }, 0.85);
+      tl.to(capDev, { opacity: 1, x: 0, duration: 0.4 }, 1.35);
+      tl.to(capPartner, { opacity: 1, x: 0, duration: 0.4 }, 1.5);
+      tl.to(hotspots, { opacity: 1, y: 0, duration: 0.45 }, 1.65);
+
+      // Rooms align; signal bridge connects desks
       if (isDesktop) {
-        tl.to(stage, { rotateY: -8, duration: 0.7 }, 1.55);
-        tl.to(empty, { xPercent: -6, duration: 0.7 }, 1.55);
-        tl.to(partner, { xPercent: 4, duration: 0.7 }, 1.55);
+        tl.to(stage, { rotateY: -7, duration: 0.75 }, 1.9);
+        tl.to(empty, { xPercent: -5, duration: 0.75 }, 1.9);
+        tl.to(partner, { xPercent: 4, duration: 0.75 }, 1.9);
       }
-      tl.to(bridge, { scaleX: 1, opacity: 1, duration: 0.55 }, 1.85);
-      tl.to(partner, { scale: isDesktop ? 1.1 : 1.06, duration: 0.6 }, 2.1);
+      tl.to(bridge, { scaleX: 1, opacity: 1, duration: 0.6 }, 2.15);
+      tl.to(partner, { scale: isDesktop ? 1.08 : 1.04, duration: 0.55 }, 2.4);
     },
   });
 
@@ -106,6 +122,19 @@ export function PartnerScene() {
           aria-hidden
         />
 
+        <p
+          data-film="cap-dev"
+          className="absolute top-[18%] left-5 z-[5] hidden border border-[var(--color-tungsten)]/40 bg-black/55 px-3 py-2 font-mono text-[10px] tracking-[0.16em] text-[var(--color-tungsten)] uppercase md:block"
+        >
+          Developer · builds the software
+        </p>
+        <p
+          data-film="cap-partner"
+          className="absolute top-[18%] right-5 z-[5] hidden border border-[var(--color-daylight)]/40 bg-black/55 px-3 py-2 font-mono text-[10px] tracking-[0.16em] text-[var(--color-daylight)] uppercase md:block"
+        >
+          Partner · owns accounts · leads interviews
+        </p>
+
         <div className="relative z-[5] w-full px-5 pb-14 md:px-10 lg:px-16">
           <div className="max-w-xl">
             <p className="font-mono text-[10px] tracking-[0.28em] text-[var(--color-daylight)] uppercase">
@@ -122,35 +151,32 @@ export function PartnerScene() {
               </span>
             </h2>
 
-            <div
-              data-film="hotspots"
-              className="mt-8 flex flex-wrap gap-3"
-            >
+            <div data-film="brief" className="mt-5 max-w-sm">
+              <ProjectBrief compact />
+            </div>
+
+            <div data-film="hotspots" className="mt-8 flex flex-wrap gap-3">
               <Hotspot
                 tone="tungsten"
                 label="Code"
-                detail={ROLE_CREDITS.technical.lines.join(" · ")}
+                detail="Frontend & backend engineering, architecture, testing, and delivery."
               />
               <Hotspot
                 tone="tungsten"
-                label="Architecture"
-                detail="I design systems, solve hard technical problems, and keep delivery honest."
+                label="Remote support"
+                detail="With your approval I help manage LinkedIn and outreach accounts remotely, plus targeting and applications."
               />
               <Hotspot
                 tone="daylight"
-                label="English"
-                detail={ROLE_CREDITS.communication.lines.join(" · ")}
+                label="Accounts"
+                detail="You own LinkedIn and professional profiles. We manage applications together under your approval."
               />
               <Hotspot
                 tone="daylight"
                 label="Interviews"
-                detail="You lead professional conversations. I support technical preparation."
+                detail="When a call is booked, you lead it. I prepare technical ground and support remotely."
               />
             </div>
-
-            <p className="mt-8 font-mono text-[10px] tracking-[0.22em] text-white/40 uppercase">
-              Two rooms align · the Signal becomes a connection
-            </p>
           </div>
         </div>
       </div>
