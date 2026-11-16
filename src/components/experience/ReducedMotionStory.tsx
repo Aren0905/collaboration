@@ -9,7 +9,6 @@ import {
   SCENES,
   SITE,
 } from "@/lib/content";
-import { PartnerApplicationForm } from "@/components/apply/PartnerApplicationForm";
 import { EXAMPLE_REVENUE_DEFAULT, formatUSD, splitRevenue } from "@/lib/revenue";
 
 export function ReducedMotionStory() {
@@ -34,91 +33,82 @@ export function ReducedMotionStory() {
       </header>
 
       <ol className="space-y-12">
-        {SCENES.filter((s) => s.id !== "threshold" && s.id !== "invite").map(
-          (scene, index) => (
-            <li key={scene.id} className="space-y-3">
-              <p className="font-mono text-[10px] tracking-[0.22em] text-white/45 uppercase">
-                {String(index + 1).padStart(2, "0")} · {scene.label}
-              </p>
-              <h2 className="font-display text-2xl md:text-3xl">{scene.title}</h2>
-              <p className="text-white/70">{scene.body}</p>
+        {SCENES.filter((s) => s.id !== "threshold").map((scene, index) => (
+          <li key={scene.id} className="space-y-3">
+            <p className="font-mono text-[10px] tracking-[0.22em] text-white/45 uppercase">
+              {String(index + 1).padStart(2, "0")} · {scene.label}
+            </p>
+            <h2 className="font-display text-2xl md:text-3xl">{scene.title}</h2>
+            <p className="text-white/70">{scene.body}</p>
 
-              {scene.id === "partner" ? (
-                <div className="grid gap-6 pt-4 sm:grid-cols-2">
-                  <RoleBlock {...ROLE_CREDITS.technical} />
-                  <RoleBlock {...ROLE_CREDITS.communication} />
-                </div>
-              ) : null}
+            {scene.id === "partner" ? (
+              <div className="grid gap-6 pt-4 sm:grid-cols-2">
+                <RoleBlock {...ROLE_CREDITS.technical} />
+                <RoleBlock {...ROLE_CREDITS.communication} />
+              </div>
+            ) : null}
 
-              {scene.id === "markets" ? (
-                <ul className="space-y-3 pt-2">
-                  {MARKET_BEATS.map((beat) => (
-                    <li key={beat.id} className="text-white/70">
-                      <span className="font-mono text-[var(--color-signal)]">
-                        {beat.index} · {beat.title}
-                      </span>{" "}
-                      {beat.detail}
-                    </li>
-                  ))}
-                </ul>
-              ) : null}
+            {scene.id === "markets" ? (
+              <ul className="space-y-3 pt-2">
+                {MARKET_BEATS.map((beat) => (
+                  <li key={beat.id} className="text-white/70">
+                    <span className="font-mono text-[var(--color-signal)]">
+                      {beat.index} · {beat.title}
+                    </span>{" "}
+                    {beat.detail}
+                  </li>
+                ))}
+              </ul>
+            ) : null}
 
-              {scene.id === "interview" ? (
-                <div className="space-y-4 pt-2">
-                  <ul className="space-y-2">
-                    {PREP_STEPS.map((step) => (
-                      <li key={step.id} className="text-white/70">
-                        <span className="text-[var(--color-tungsten)]">
-                          {step.label}
-                        </span>
-                        : {step.detail}
-                      </li>
-                    ))}
-                  </ul>
-                  <ul className="space-y-2">
-                    {INTERVIEW_BEATS.map((beat) => (
-                      <li key={beat.id} className="text-white/70">
-                        <span className="text-[var(--color-daylight)]">
-                          {beat.label}
-                        </span>
-                        : {beat.detail}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              ) : null}
-
-              {scene.id === "delivery" ? (
-                <ul className="space-y-2 pt-2">
-                  {DELIVERY_TIMELINE.map((step) => (
+            {scene.id === "interview" ? (
+              <div className="space-y-4 pt-2">
+                <ul className="space-y-2">
+                  {PREP_STEPS.map((step) => (
                     <li key={step.id} className="text-white/70">
-                      <span className="text-[var(--color-signal)]">
+                      <span className="text-[var(--color-tungsten)]">
                         {step.label}
                       </span>
                       : {step.detail}
                     </li>
                   ))}
                 </ul>
-              ) : null}
+                <ul className="space-y-2">
+                  {INTERVIEW_BEATS.map((beat) => (
+                    <li key={beat.id} className="text-white/70">
+                      <span className="text-[var(--color-daylight)]">
+                        {beat.label}
+                      </span>
+                      : {beat.detail}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ) : null}
 
-              {scene.id === "split" ? (
-                <p className="pt-2 text-sm text-white/55">
-                  Example {formatUSD(EXAMPLE_REVENUE_DEFAULT)} → Developer{" "}
-                  {formatUSD(split.developer)} · Partner{" "}
-                  {formatUSD(split.partner)}. Illustrative only.
-                </p>
-              ) : null}
-            </li>
-          ),
-        )}
+            {scene.id === "delivery" ? (
+              <ul className="space-y-2 pt-2">
+                {DELIVERY_TIMELINE.map((step) => (
+                  <li key={step.id} className="text-white/70">
+                    <span className="text-[var(--color-signal)]">
+                      {step.label}
+                    </span>
+                    : {step.detail}
+                  </li>
+                ))}
+              </ul>
+            ) : null}
+
+            {scene.id === "split" ? (
+              <p className="pt-2 text-sm text-white/55">
+                Example {formatUSD(EXAMPLE_REVENUE_DEFAULT)} → Developer{" "}
+                {formatUSD(split.developer)} · Partner{" "}
+                {formatUSD(split.partner)}. Illustrative only.
+              </p>
+            ) : null}
+          </li>
+        ))}
       </ol>
-
-      <section className="mt-16 space-y-6 border-t border-white/15 pt-10">
-        <h2 className="font-display text-3xl">
-          Your English. My code. Our next opportunity.
-        </h2>
-        <PartnerApplicationForm />
-      </section>
     </article>
   );
 }

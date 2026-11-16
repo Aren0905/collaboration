@@ -189,7 +189,7 @@ export function OpeningScene() {
               </span>
             </div>
 
-            <div data-film="cta" className="mt-8 flex flex-wrap gap-3">
+            <div data-film="cta" className="mt-8">
               <button
                 type="button"
                 onClick={() => scrollToScene("partner")}
@@ -200,13 +200,6 @@ export function OpeningScene() {
                 )}
               >
                 {content.cta}
-              </button>
-              <button
-                type="button"
-                onClick={() => scrollToScene("invite")}
-                className="pointer-events-auto border border-white/30 px-5 py-3 font-mono text-[11px] tracking-[0.2em] text-white/70 uppercase hover:border-white/60 hover:text-white"
-              >
-                Become a partner
               </button>
             </div>
           </div>

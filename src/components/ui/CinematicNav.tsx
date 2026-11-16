@@ -11,7 +11,6 @@ const NAV_ITEMS: Array<{ id: SceneId; label: string; group?: SceneId[] }> = [
     group: ["threshold", "partner", "markets", "interview", "delivery"],
   },
   { id: "split", label: "60/40" },
-  { id: "invite", label: "Partner" },
 ];
 
 export function CinematicNav() {

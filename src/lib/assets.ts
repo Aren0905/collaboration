@@ -42,12 +42,6 @@ export const FILM_ASSETS = {
     width: 1920,
     height: 1080,
   },
-  invitation: {
-    src: "/images/your-chair-24.jpg",
-    alt: "Empty visitor chair between the developer and communication partner",
-    width: 1920,
-    height: 1080,
-  },
   portraitAaron: {
     src: "/images/ref/aaron.jpg",
     alt: "Portrait of Aaron, software developer",

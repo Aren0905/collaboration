@@ -11,7 +11,6 @@ const ORDER: SceneId[] = [
   "interview",
   "delivery",
   "split",
-  "invite",
 ];
 
 /**

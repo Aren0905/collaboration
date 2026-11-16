@@ -61,17 +61,6 @@ export const SCENES = [
     disclaimer:
       "Figures are illustrative only — not guaranteed earnings. Payment basis and expenses must be agreed in advance.",
   },
-  {
-    id: "invite",
-    label: "Chair",
-    eyebrow: "Scene 07 · Your chair",
-    title: "Your English. My code. Our next opportunity.",
-    line1: "YOUR ENGLISH.",
-    line2: "MY CODE.",
-    line3: "OUR NEXT OPPORTUNITY.",
-    body: "Let's explore whether we can build a long-term international software partnership together.",
-    cta: "Become a partner",
-  },
 ] as const;
 
 export type SceneId = (typeof SCENES)[number]["id"];
@@ -86,7 +75,6 @@ export const SIGNAL_FORMS: Record<
   interview: { label: "04", form: "Call link" },
   delivery: { label: "05", form: "Timeline" },
   split: { label: "06", form: "Revenue" },
-  invite: { label: "07", form: "Your chair" },
 };
 
 export const ROLE_CREDITS = {
@@ -254,26 +242,4 @@ export const PARTNER_PIPELINE = [
   "Updates",
   "Feedback",
   "Approval",
-] as const;
-
-export const APPLY_FIELDS = {
-  honestyLabel:
-    "I agree that profiles, interviews, and client agreements must represent our roles honestly.",
-  noGuaranteeLabel:
-    "I understand opportunities are not guaranteed and any engagement depends on mutual fit, authorization, and agreement.",
-  submitLabel: "Become a partner",
-  arrangement:
-    "Proposed arrangement: I handle software engineering, architecture, implementation, testing, and delivery. You lead interviews, client communication, and coordination. Proposed share is 60% development / 40% communication.",
-} as const;
-
-export const ENGLISH_CONFIDENCE = [
-  { value: "conversational", label: "Conversational" },
-  { value: "professional", label: "Professional" },
-  { value: "native-level", label: "Native-level" },
-] as const;
-
-export const OPPORTUNITY_INTERESTS = [
-  { value: "us-uk", label: "US & UK remote contracts (primary)" },
-  { value: "local", label: "My home-country opportunities" },
-  { value: "global", label: "Other worldwide remote projects" },
 ] as const;

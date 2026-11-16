@@ -53,13 +53,6 @@ export const SCENE_THEMES: Record<SceneId, SceneTheme> = {
     accent: "var(--color-copper)",
     atmosphere: "tungsten",
   },
-  invite: {
-    id: "invite",
-    background: "var(--color-void)",
-    foreground: "var(--color-paper)",
-    accent: "var(--color-tungsten)",
-    atmosphere: "void",
-  },
 };
 
 export function getSceneIndex(id: SceneId): number {

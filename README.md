@@ -24,10 +24,6 @@ npm run typecheck
 npm run build
 ```
 
-## Partner form
-
-Opens a prepared **mailto** to `aaron.man0905@gmail.com`. No fake success without a real message.
-
 ## Deploy
 
 Push to GitHub; Vercel auto-deploys. No env vars required.

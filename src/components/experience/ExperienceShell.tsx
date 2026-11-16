@@ -14,7 +14,6 @@ import { MarketsScene } from "@/components/scenes/MarketsScene";
 import { InterviewScene } from "@/components/scenes/InterviewScene";
 import { DeliveryScene } from "@/components/scenes/DeliveryScene";
 import { SplitScene } from "@/components/scenes/SplitScene";
-import { InviteScene } from "@/components/scenes/InviteScene";
 
 function ExperienceInner() {
   const { reducedMotion } = useExperience();
@@ -43,7 +42,6 @@ function ExperienceInner() {
         <InterviewScene />
         <DeliveryScene />
         <SplitScene />
-        <InviteScene />
       </main>
     </>
   );
