@@ -9,11 +9,9 @@ import {
   SCENES,
   SITE,
 } from "@/lib/content";
+import { PartnerApplicationForm } from "@/components/apply/PartnerApplicationForm";
 import { EXAMPLE_REVENUE_DEFAULT, formatUSD, splitRevenue } from "@/lib/revenue";
 
-/**
- * Linear, fully readable alternative when prefers-reduced-motion is on.
- */
 export function ReducedMotionStory() {
   const split = splitRevenue(EXAMPLE_REVENUE_DEFAULT);
 
@@ -24,23 +22,20 @@ export function ReducedMotionStory() {
     >
       <header className="mb-16 space-y-4 border-b border-white/15 pb-10">
         <p className="font-mono text-[11px] tracking-[0.28em] text-[var(--color-signal)] uppercase">
-          Reduced motion edition · {SITE.title}
+          Reduced motion · {SITE.title}
         </p>
         <h1 className="font-display text-4xl md:text-5xl">
           I build software. You lead conversations. We win projects together.
         </h1>
-        <p className="text-lg text-white/80">
-          I&apos;m a software developer seeking English-speaking partners to
-          pursue remote software opportunities—especially in the US and UK.
-        </p>
+        <p className="text-lg text-white/80">{SITE.description}</p>
         <p className="text-sm text-white/55">
-          Developer 60% · Communication partner 40%. Transparent roles. No
-          impersonation.
+          Developer 60% · Communication partner 40%. Transparent roles.
         </p>
       </header>
 
       <ol className="space-y-12">
-        {SCENES.filter((s) => s.id !== "threshold").map((scene, index) => (
+        {SCENES.filter((s) => s.id !== "threshold" && s.id !== "invite").map(
+          (scene, index) => (
             <li key={scene.id} className="space-y-3">
               <p className="font-mono text-[10px] tracking-[0.22em] text-white/45 uppercase">
                 {String(index + 1).padStart(2, "0")} · {scene.label}
@@ -110,13 +105,20 @@ export function ReducedMotionStory() {
                 <p className="pt-2 text-sm text-white/55">
                   Example {formatUSD(EXAMPLE_REVENUE_DEFAULT)} → Developer{" "}
                   {formatUSD(split.developer)} · Partner{" "}
-                  {formatUSD(split.partner)}. Illustrative only — not guaranteed
-                  earnings.
+                  {formatUSD(split.partner)}. Illustrative only.
                 </p>
               ) : null}
             </li>
-        ))}
+          ),
+        )}
       </ol>
+
+      <section className="mt-16 space-y-6 border-t border-white/15 pt-10">
+        <h2 className="font-display text-3xl">
+          Your English. My code. Our next opportunity.
+        </h2>
+        <PartnerApplicationForm />
+      </section>
     </article>
   );
 }

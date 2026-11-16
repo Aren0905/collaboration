@@ -4,7 +4,12 @@ import { useRef } from "react";
 import { useCinematicScene } from "@/hooks/useCinematicScene";
 import { FilmPlate } from "@/components/cinematic/FilmPlate";
 import { FILM_ASSETS } from "@/lib/assets";
-import { INTERVIEW_BEATS, PREP_STEPS, SCENES } from "@/lib/content";
+import {
+  INTERVIEW_BEATS,
+  INTERVIEW_FLOW,
+  PREP_STEPS,
+  SCENES,
+} from "@/lib/content";
 
 const content = SCENES.find((s) => s.id === "interview")!;
 
@@ -116,6 +121,17 @@ export function InterviewScene() {
             <p data-film="body" className="mt-4 text-sm text-white/70 md:text-base">
               {content.body}
             </p>
+
+            <ol className="mt-5 flex flex-wrap gap-2">
+              {INTERVIEW_FLOW.map((step, i) => (
+                <li
+                  key={step.id}
+                  className="border border-white/20 bg-black/40 px-2.5 py-1 font-mono text-[9px] tracking-[0.16em] text-white/70 uppercase"
+                >
+                  {String(i + 1).padStart(2, "0")} {step.label}
+                </li>
+              ))}
+            </ol>
 
             <div
               data-film="stamp"

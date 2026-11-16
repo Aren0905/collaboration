@@ -23,7 +23,7 @@ const mono = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
-  title: `${SITE.title} · I build. You lead conversations.`,
+  title: `${SITE.title} · ${SITE.tagline}`,
   description: SITE.description,
 };
 

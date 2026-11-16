@@ -1,12 +1,13 @@
-# The Other Chair
+# The Connection
 
-Cinematic recruitment experience: a software developer seeking English-speaking communication partners for transparent remote collaboration (especially US/UK). Developer builds. Partner leads conversations. Proposed share **60% / 40%**.
+Interactive cinematic film explaining a transparent remote software partnership:
 
-## Stack
+- **Developer (me):** engineering, architecture, delivery, technical interview support  
+- **Communication partner (you):** English, interviews, meetings, coordination  
+- **Focus:** US & UK remote opportunities (+ home country / worldwide)  
+- **Share:** 60% developer / 40% communication (illustrative)
 
-- Next.js App Router + TypeScript + Tailwind
-- GSAP ScrollTrigger + Lenis + Motion
-- Photoreal film plates in `public/images/`
+Secondary brand: *The Other Chair*.
 
 ## Develop
 
@@ -23,6 +24,10 @@ npm run typecheck
 npm run build
 ```
 
-## Deploy (Vercel)
+## Partner form
 
-Import the GitHub repo. No environment variables required. Framework: Next.js.
+Opens a prepared **mailto** to `aaron.man0905@gmail.com`. No fake success without a real message.
+
+## Deploy
+
+Push to GitHub; Vercel auto-deploys. No env vars required.

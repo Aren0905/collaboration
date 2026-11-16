@@ -7,10 +7,11 @@ import { cn } from "@/lib/cn";
 const NAV_ITEMS: Array<{ id: SceneId; label: string; group?: SceneId[] }> = [
   {
     id: "partner",
-    label: "Story",
+    label: "Film",
     group: ["threshold", "partner", "markets", "interview", "delivery"],
   },
   { id: "split", label: "60/40" },
+  { id: "invite", label: "Partner" },
 ];
 
 export function CinematicNav() {
@@ -27,6 +28,9 @@ export function CinematicNav() {
         >
           <span className="font-display text-sm tracking-[0.18em] text-[var(--color-paper)] uppercase md:text-base">
             {SITE.title}
+          </span>
+          <span className="mt-0.5 block max-w-[14rem] font-mono text-[9px] tracking-[0.14em] text-white/40 uppercase">
+            {SITE.tagline}
           </span>
         </button>
 

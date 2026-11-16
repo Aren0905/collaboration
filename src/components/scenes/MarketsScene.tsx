@@ -123,7 +123,7 @@ export function MarketsScene() {
             className="will-change-transform border border-white/20 bg-black/60 p-5 backdrop-blur-md"
           >
             <p className="font-mono text-[9px] tracking-[0.22em] text-[var(--color-daylight)] uppercase">
-              Opportunity lifts off the map
+              Signal · listing lifts off the map
             </p>
             {ILLUSTRATIVE_LISTINGS.map((listing) => (
               <div

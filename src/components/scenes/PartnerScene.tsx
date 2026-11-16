@@ -3,14 +3,14 @@
 import { useRef } from "react";
 import { useCinematicScene } from "@/hooks/useCinematicScene";
 import { FilmPlate } from "@/components/cinematic/FilmPlate";
+import { Hotspot } from "@/components/cinematic/Hotspot";
 import { FILM_ASSETS } from "@/lib/assets";
 import { ROLE_CREDITS, SCENES } from "@/lib/content";
 
 const content = SCENES.find((s) => s.id === "partner")!;
 
 /**
- * Scene 2 — Empty chair → partner workspace.
- * Signature: crossfade + clip reveal from vacancy to daylight partner.
+ * Scene 2 — Empty chair → partner daylight → rooms align into one office.
  */
 export function PartnerScene() {
   const rootRef = useRef<HTMLElement>(null);
@@ -20,49 +20,46 @@ export function PartnerScene() {
     id: "partner",
     rootRef,
     pinRef,
-    endDesktop: "+=240%",
-    endMobile: "+=160%",
-    scrubDesktop: 0.7,
+    endDesktop: "+=280%",
+    endMobile: "+=180%",
+    scrubDesktop: 0.72,
     scrubMobile: 0.5,
     build: ({ gsap: g, q, isDesktop }, tl) => {
       const empty = q("[data-film='empty']");
       const partner = q("[data-film='partner']");
+      const stage = q("[data-film='stage']");
       const title = q("[data-film='title']");
       const body = q("[data-film='body']");
-      const roles = q("[data-film='roles']");
-      const portal = q("[data-film='portal']");
+      const hotspots = q("[data-film='hotspots']");
+      const bridge = q("[data-film='bridge']");
 
-      g.set(empty, { opacity: 1, scale: 1.04 });
+      g.set(empty, { opacity: 1, scale: 1.06 });
       g.set(partner, {
         opacity: 0,
-        clipPath: isDesktop
-          ? "inset(0 0 0 100%)"
-          : "inset(100% 0 0 0)",
+        clipPath: isDesktop ? "inset(0 0 0 100%)" : "inset(100% 0 0 0)",
       });
-      g.set([title, body], { opacity: 0, y: 24 });
-      g.set(roles, { opacity: 0, y: 20 });
-      g.set(portal, { opacity: 0, scale: 0.92 });
+      g.set(stage, { rotateY: 0 });
+      g.set([title, body], { opacity: 0, y: 28 });
+      g.set(hotspots, { opacity: 0, y: 16 });
+      g.set(bridge, { scaleX: 0, opacity: 0, transformOrigin: "left center" });
 
-      tl.to(empty, { scale: 1, duration: 0.6 }, 0);
-      tl.to([title, body], { opacity: 1, y: 0, stagger: 0.1, duration: 0.5 }, 0.15);
+      tl.to(empty, { scale: 1, duration: 0.55 }, 0);
+      tl.to([title, body], { opacity: 1, y: 0, stagger: 0.1, duration: 0.5 }, 0.2);
       tl.to(
         partner,
-        {
-          opacity: 1,
-          clipPath: "inset(0 0 0 0%)",
-          duration: 1.1,
-        },
-        0.45,
+        { opacity: 1, clipPath: "inset(0% 0% 0% 0%)", duration: 1.15 },
+        0.55,
       );
-      tl.to(empty, { opacity: 0.25, duration: 0.8 }, 0.55);
-      tl.to(roles, { opacity: 1, y: 0, duration: 0.5 }, 1.2);
-      tl.to(portal, { opacity: 1, scale: 1, duration: 0.55 }, 1.55);
-      // Push into partner laptop as portal cue
-      tl.to(
-        partner,
-        { scale: isDesktop ? 1.12 : 1.08, duration: 0.7 },
-        1.7,
-      );
+      tl.to(empty, { opacity: 0.2, duration: 0.8 }, 0.7);
+      tl.to(hotspots, { opacity: 1, y: 0, duration: 0.45 }, 1.25);
+      // Surprise: rooms rotate/align as one shared office
+      if (isDesktop) {
+        tl.to(stage, { rotateY: -8, duration: 0.7 }, 1.55);
+        tl.to(empty, { xPercent: -6, duration: 0.7 }, 1.55);
+        tl.to(partner, { xPercent: 4, duration: 0.7 }, 1.55);
+      }
+      tl.to(bridge, { scaleX: 1, opacity: 1, duration: 0.55 }, 1.85);
+      tl.to(partner, { scale: isDesktop ? 1.1 : 1.06, duration: 0.6 }, 2.1);
     },
   });
 
@@ -76,30 +73,37 @@ export function PartnerScene() {
     >
       <div
         ref={pinRef}
-        className="relative flex h-[100svh] w-full items-end overflow-hidden bg-[var(--color-ink)] md:items-center"
+        className="relative flex h-[100svh] w-full items-end overflow-hidden bg-[var(--color-ink)] [perspective:1600px] md:items-center"
       >
         <div
-          data-film="empty"
-          className="absolute inset-0 will-change-transform"
+          data-film="stage"
+          className="absolute inset-0 will-change-transform [transform-style:preserve-3d]"
         >
-          <FilmPlate
-            src={FILM_ASSETS.emptyChair.src}
-            alt={FILM_ASSETS.emptyChair.alt}
-            overlay="heavy"
-          />
+          <div data-film="empty" className="absolute inset-0">
+            <FilmPlate
+              src={FILM_ASSETS.emptyChair.src}
+              alt={FILM_ASSETS.emptyChair.alt}
+              overlay="heavy"
+            />
+          </div>
+          <div
+            data-film="partner"
+            className="absolute inset-0"
+            style={{ clipPath: "inset(0 0 0 100%)" }}
+          >
+            <FilmPlate
+              src={FILM_ASSETS.partnerDay.src}
+              alt={FILM_ASSETS.partnerDay.alt}
+              overlay="left"
+            />
+          </div>
         </div>
 
         <div
-          data-film="partner"
-          className="absolute inset-0 will-change-transform"
-          style={{ clipPath: "inset(0 0 0 100%)" }}
-        >
-          <FilmPlate
-            src={FILM_ASSETS.partnerDay.src}
-            alt={FILM_ASSETS.partnerDay.alt}
-            overlay="left"
-          />
-        </div>
+          data-film="bridge"
+          className="pointer-events-none absolute top-1/2 right-[8%] left-[8%] z-[4] hidden h-px origin-left bg-gradient-to-r from-[var(--color-tungsten)] via-[var(--color-signal)] to-[var(--color-daylight)] md:block"
+          aria-hidden
+        />
 
         <div className="relative z-[5] w-full px-5 pb-14 md:px-10 lg:px-16">
           <div className="max-w-xl">
@@ -109,71 +113,46 @@ export function PartnerScene() {
             <h2
               id="scene-partner-title"
               data-film="title"
-              className="mt-3 font-display text-[clamp(1.8rem,4.5vw,3.2rem)] leading-[1.08] text-balance text-white"
+              className="mt-3 font-display text-[clamp(1.8rem,4.5vw,3.1rem)] leading-[1.08] text-white"
             >
               {content.title}
+              <span className="mt-2 block text-[var(--color-daylight)]">
+                {content.body}
+              </span>
             </h2>
-            <p
-              data-film="body"
-              className="mt-4 text-lg text-[var(--color-daylight)] md:text-xl"
-            >
-              {content.body}
-            </p>
 
             <div
-              data-film="roles"
-              className="mt-8 grid gap-6 sm:grid-cols-2"
+              data-film="hotspots"
+              className="mt-8 flex flex-wrap gap-3"
             >
-              <RoleList
-                title={ROLE_CREDITS.technical.title}
-                lines={ROLE_CREDITS.technical.lines}
+              <Hotspot
                 tone="tungsten"
+                label="Code"
+                detail={ROLE_CREDITS.technical.lines.join(" · ")}
               />
-              <RoleList
-                title={ROLE_CREDITS.communication.title}
-                lines={ROLE_CREDITS.communication.lines}
+              <Hotspot
+                tone="tungsten"
+                label="Architecture"
+                detail="I design systems, solve hard technical problems, and keep delivery honest."
+              />
+              <Hotspot
                 tone="daylight"
+                label="English"
+                detail={ROLE_CREDITS.communication.lines.join(" · ")}
+              />
+              <Hotspot
+                tone="daylight"
+                label="Interviews"
+                detail="You lead professional conversations. I support technical preparation."
               />
             </div>
 
-            <p
-              data-film="portal"
-              className="mt-8 font-mono text-[10px] tracking-[0.22em] text-white/45 uppercase"
-            >
-              Through his screen → we search the world together
+            <p className="mt-8 font-mono text-[10px] tracking-[0.22em] text-white/40 uppercase">
+              Two rooms align · the Signal becomes a connection
             </p>
           </div>
         </div>
       </div>
     </section>
-  );
-}
-
-function RoleList({
-  title,
-  lines,
-  tone,
-}: {
-  title: string;
-  lines: readonly string[];
-  tone: "tungsten" | "daylight";
-}) {
-  return (
-    <div className="border border-white/15 bg-black/40 p-4 backdrop-blur-sm">
-      <p
-        className={
-          tone === "tungsten"
-            ? "font-mono text-[10px] tracking-[0.2em] text-[var(--color-tungsten)] uppercase"
-            : "font-mono text-[10px] tracking-[0.2em] text-[var(--color-daylight)] uppercase"
-        }
-      >
-        {title}
-      </p>
-      <ul className="mt-3 space-y-1.5 text-sm text-white/75">
-        {lines.map((line) => (
-          <li key={line}>{line}</li>
-        ))}
-      </ul>
-    </div>
   );
 }
