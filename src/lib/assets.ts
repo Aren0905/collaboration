@@ -1,13 +1,13 @@
 /** Photoreal film plates for THE CONNECTION. */
 export const FILM_ASSETS = {
   developerNight: {
-    src: "/images/dev-night-aaron.jpg",
-    alt: "Aaron, the software developer, working late at a premium night desk",
+    src: "/images/dev-night-24.jpg",
+    alt: "Aaron, a 24-year-old software developer, working late in a navy sweatshirt at his desk",
     width: 1920,
     height: 1080,
   },
   emptyChair: {
-    src: "/images/dev-empty-chair-aaron.jpg",
+    src: "/images/dev-empty-24.jpg",
     alt: "Developer workspace with an empty second chair for a communication partner",
     width: 1920,
     height: 1080,
@@ -31,19 +31,19 @@ export const FILM_ASSETS = {
     height: 1080,
   },
   coding: {
-    src: "/images/dev-coding-aaron.jpg",
-    alt: "Aaron implementing a web application in a realistic development environment",
+    src: "/images/dev-coding-24.jpg",
+    alt: "Aaron coding a web application in a charcoal hoodie at dual monitors",
     width: 1920,
     height: 1080,
   },
   sharedProject: {
-    src: "/images/shared-dual-v2.jpg",
+    src: "/images/shared-dual-24.jpg",
     alt: "Developer and communication partner workspaces linked by one project Signal",
     width: 1920,
     height: 1080,
   },
   invitation: {
-    src: "/images/your-chair-v2.jpg",
+    src: "/images/your-chair-24.jpg",
     alt: "Empty visitor chair between the developer and communication partner",
     width: 1920,
     height: 1080,
