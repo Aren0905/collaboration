@@ -40,9 +40,9 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${display.variable} ${body.variable} ${mono.variable} h-full antialiased`}
+      className={`${display.variable} ${body.variable} ${mono.variable} antialiased`}
     >
-      <body className="min-h-full bg-[var(--color-void)] text-[var(--color-paper)]">
+      <body className="bg-[var(--color-void)] text-[var(--color-paper)]">
         {children}
       </body>
     </html>

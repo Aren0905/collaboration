@@ -50,8 +50,17 @@
 }
 
 @layer base {
+  /*
+   * Mobile scroll lock fix:
+   * Do NOT set overflow-x on both html and body — that combination
+   * breaks vertical touch scrolling on iOS/Android WebKit.
+   */
   html {
     scroll-behavior: auto;
+    height: auto;
+    /* !important: GSAP/pin layers sometimes force pan-x and kill vertical scroll */
+    touch-action: pan-y !important;
+    -webkit-text-size-adjust: 100%;
   }
 
   body {
@@ -59,6 +68,40 @@
     color: var(--foreground);
     font-family: var(--font-body), ui-sans-serif, system-ui, sans-serif;
     text-rendering: optimizeLegibility;
+    min-height: 100%;
+    overflow-x: clip;
+    touch-action: pan-y !important;
+    overscroll-behavior-y: auto;
+  }
+
+  #experience {
+    width: 100%;
+    touch-action: pan-y !important;
+  }
+
+  /* Pinned film frames must still allow vertical page scroll. */
+  .pin-spacer,
+  .pin-spacer > * {
+    touch-action: pan-y !important;
+  }
+
+  /* Keep cinematic panels usable on small phones */
+  @media (max-width: 767px) {
+    [data-film="toast"],
+    [data-film="brief"],
+    [data-film="call"],
+    [data-film="ide"],
+    [data-film="dash"],
+    [data-film="selected"] {
+      max-width: 100%;
+      pointer-events: none;
+    }
+
+    [data-film="cta"] button,
+    [data-film="hotspots"] button {
+      pointer-events: auto;
+      touch-action: manipulation;
+    }
   }
 
   ::selection {
@@ -80,6 +123,18 @@
   background-size: 180px 180px;
 }
 
+/* Face-centered crop for portrait viewports (vars set per FilmPlate). */
+.film-focus {
+  object-fit: cover;
+  object-position: var(--film-focus-mobile-x, 50%) var(--film-focus-mobile-y, 28%);
+}
+
+@media (min-width: 768px) {
+  .film-focus {
+    object-position: var(--film-focus-x, 50%) var(--film-focus-y, 36%);
+  }
+}
+
 @keyframes opening-scroll-pulse {
   0%,
   100% {
@@ -98,6 +153,7 @@
 
 .revenue-slider {
   height: 1.25rem;
+  touch-action: none;
 }
 
 .revenue-slider:focus-visible {

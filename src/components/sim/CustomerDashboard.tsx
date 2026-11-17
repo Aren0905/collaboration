@@ -58,7 +58,7 @@ export function CustomerDashboard({
         )}
       </div>
 
-      <div className="flex min-h-[220px]">
+      <div className="flex min-h-[160px] md:min-h-[220px]">
         <aside
           className={cn(
             "w-[28%] border-r border-white/10 bg-[#0b1119] p-2 transition-opacity duration-300",

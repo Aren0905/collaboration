@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { cn } from "@/lib/cn";
+import { filmFocusStyle, type FilmFocus } from "@/lib/assets";
 
 type FilmPlateProps = {
   src: string;
@@ -11,6 +12,10 @@ type FilmPlateProps = {
   imageClassName?: string;
   sizes?: string;
   overlay?: "none" | "soft" | "heavy" | "left" | "right" | "bottom";
+  /** Desktop object-position anchor (face / subject). */
+  focus?: FilmFocus;
+  /** Mobile object-position anchor — keeps faces in the upper plate. */
+  focusMobile?: FilmFocus;
 };
 
 const OVERLAYS: Record<NonNullable<FilmPlateProps["overlay"]>, string> = {
@@ -22,6 +27,9 @@ const OVERLAYS: Record<NonNullable<FilmPlateProps["overlay"]>, string> = {
   bottom: "bg-gradient-to-t from-black/90 via-black/40 to-transparent",
 };
 
+const DEFAULT_FOCUS: FilmFocus = { x: 50, y: 36 };
+const DEFAULT_FOCUS_MOBILE: FilmFocus = { x: 50, y: 28 };
+
 /** Full-bleed photoreal plate with cinematic grade overlays. */
 export function FilmPlate({
   src,
@@ -31,6 +39,8 @@ export function FilmPlate({
   imageClassName,
   sizes = "100vw",
   overlay = "soft",
+  focus = DEFAULT_FOCUS,
+  focusMobile = DEFAULT_FOCUS_MOBILE,
 }: FilmPlateProps) {
   return (
     <div className={cn("absolute inset-0 overflow-hidden", className)}>
@@ -40,7 +50,11 @@ export function FilmPlate({
         fill
         priority={priority}
         sizes={sizes}
-        className={cn("object-cover will-change-transform", imageClassName)}
+        style={filmFocusStyle({ focus, focusMobile })}
+        className={cn(
+          "film-focus will-change-transform",
+          imageClassName,
+        )}
       />
       {overlay !== "none" ? (
         <div

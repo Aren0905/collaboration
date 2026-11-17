@@ -4,6 +4,11 @@ import { useRef } from "react";
 import { useCinematicScene } from "@/hooks/useCinematicScene";
 import { useExperience } from "@/components/experience/ExperienceContext";
 import { FilmPlate } from "@/components/cinematic/FilmPlate";
+import {
+  ScenePin,
+  ScenePanel,
+  SceneStage,
+} from "@/components/cinematic/ScenePin";
 import { ProjectBrief } from "@/components/sim/ProjectBrief";
 import { ScrollCue } from "@/components/opening/ScrollCue";
 import { FILM_ASSETS } from "@/lib/assets";
@@ -15,7 +20,7 @@ const content = SCENES.find((s) => s.id === "threshold")!;
 
 /**
  * Event 1 — Opportunity arrives.
- * Workspace → monitor zoom → notification expands into project brief.
+ * Same scroll film on mobile and desktop: plate stays visible, events play in stage.
  */
 export function OpeningScene() {
   const rootRef = useRef<HTMLElement>(null);
@@ -27,9 +32,9 @@ export function OpeningScene() {
     rootRef,
     pinRef,
     endDesktop: "+=300%",
-    endMobile: "+=200%",
+    endMobile: "+=160%",
     scrubDesktop: 0.7,
-    scrubMobile: 0.5,
+    scrubMobile: true,
     build: ({ gsap: g, q, targets, isDesktop }, tl) => {
       const plate = q("[data-film='plate']");
       const veil = q("[data-film='veil']");
@@ -40,67 +45,66 @@ export function OpeningScene() {
       const meta = q("[data-film='meta']");
       const cta = q("[data-film='cta']");
       const aperture = q("[data-film='aperture']");
+      const cue = q("[data-opening='scroll-cue']");
       const copyBlock = targets(support, meta, cta);
 
-      // Start barely visible — presence sensed, not fully seen
-      g.set(veil, { opacity: 0.58 });
-      g.set(plate, { scale: 1.14, filter: "brightness(0.55)" });
-      g.set(toast, { opacity: 0, scale: 0.88, y: 28 });
-      g.set(brief, { opacity: 0, scale: 0.92, y: 40, transformOrigin: "50% 0%" });
-      g.set(lines, { opacity: 0, y: 36, rotateX: 12 });
-      g.set(copyBlock, { opacity: 0, y: 18 });
+      g.set(veil, { opacity: isDesktop ? 0.5 : 0.28 });
+      g.set(plate, {
+        scale: 1.14,
+        filter: isDesktop ? "brightness(0.6)" : "brightness(0.78)",
+      });
+      g.set(toast, { opacity: 0, scale: 0.92, y: 20 });
+      g.set(brief, { opacity: 0, scale: 0.96, y: 24, transformOrigin: "50% 0%" });
+      g.set(lines, { opacity: 0, y: 22, rotateX: isDesktop ? 10 : 0 });
+      g.set(copyBlock, { opacity: 0, y: 14 });
       g.set(aperture, { scale: 0, opacity: 0 });
+      g.set(cue, { opacity: 0 });
 
-      // Reveal into a readable workspace
-      tl.to(veil, { opacity: 0.08, duration: 0.85 }, 0);
+      tl.to(veil, { opacity: 0.08, duration: 0.75 }, 0);
       tl.to(
         plate,
         {
-          scale: isDesktop ? 1.06 : 1.1,
+          scale: isDesktop ? 1.06 : 1.05,
           filter: "brightness(1)",
-          duration: 1.15,
+          duration: 1.05,
         },
         0,
       );
+      tl.to(cue, { opacity: 1, duration: 0.35 }, 0.25);
 
-      // Notification appears on the “monitor”
-      tl.to(toast, { opacity: 1, scale: 1, y: 0, duration: 0.5 }, 0.55);
+      tl.to(toast, { opacity: 1, scale: 1, y: 0, duration: 0.45 }, 0.45);
       tl.to(
         lines,
-        { opacity: 1, y: 0, rotateX: 0, stagger: 0.1, duration: 0.45 },
-        0.85,
+        { opacity: 1, y: 0, rotateX: 0, stagger: 0.08, duration: 0.4 },
+        0.7,
       );
-      tl.to(support, { opacity: 1, y: 0, duration: 0.35 }, 1.2);
-      tl.to(meta, { opacity: 1, y: 0, duration: 0.3 }, 1.35);
-      tl.to(cta, { opacity: 1, y: 0, duration: 0.3 }, 1.45);
+      tl.to(support, { opacity: 1, y: 0, duration: 0.3 }, 1.05);
+      tl.to(meta, { opacity: 1, y: 0, duration: 0.28 }, 1.15);
+      tl.to(cta, { opacity: 1, y: 0, duration: 0.28 }, 1.25);
 
-      // Camera into monitor + toast expands into brief
       tl.to(
         plate,
-        { scale: isDesktop ? 1.38 : 1.22, duration: 0.9 },
-        1.75,
+        { scale: isDesktop ? 1.32 : 1.18, duration: 0.85 },
+        1.65,
       );
       tl.to(
         toast,
         {
-          scale: isDesktop ? 1.35 : 1.15,
-          y: isDesktop ? -12 : -6,
+          scale: isDesktop ? 1.18 : 1.06,
+          y: -8,
           opacity: 0,
-          duration: 0.55,
+          duration: 0.45,
         },
-        1.85,
+        1.75,
       );
+      tl.to(brief, { opacity: 1, scale: 1, y: 0, duration: 0.55 }, 1.95);
+      tl.to(aperture, { scale: 1, opacity: 0.7, duration: 0.5 }, 2.05);
       tl.to(
-        brief,
-        { opacity: 1, scale: 1, y: 0, duration: 0.7 },
-        2.05,
+        targets(support, meta, lines),
+        { opacity: 0.4, duration: 0.4 },
+        2.1,
       );
-      tl.to(aperture, { scale: 1, opacity: 0.85, duration: 0.65 }, 2.15);
-      tl.to(
-        targets(support, meta, cta, lines),
-        { opacity: 0.28, duration: 0.45 },
-        2.2,
-      );
+      tl.to(cue, { opacity: 0, duration: 0.3 }, 2.1);
     },
   });
 
@@ -112,14 +116,17 @@ export function OpeningScene() {
       aria-labelledby="scene-threshold-title"
       className="relative"
     >
-      <div
+      <ScenePin
         ref={pinRef}
-        className="relative flex h-[100svh] w-full items-end overflow-hidden bg-[var(--color-void)] [perspective:1400px] md:items-center"
+        className="bg-[var(--color-void)] [perspective:1400px]"
+        align="end"
       >
         <div data-film="plate" className="absolute inset-0 will-change-transform">
           <FilmPlate
             src={FILM_ASSETS.developerNight.src}
             alt={FILM_ASSETS.developerNight.alt}
+            focus={FILM_ASSETS.developerNight.focus}
+            focusMobile={FILM_ASSETS.developerNight.focusMobile}
             priority
             overlay="soft"
           />
@@ -127,7 +134,7 @@ export function OpeningScene() {
 
         <div
           data-film="veil"
-          className="pointer-events-none absolute inset-0 z-[2] bg-[radial-gradient(ellipse_at_58%_40%,rgba(5,7,12,0.35)_0%,rgba(5,7,12,0.72)_48%,rgba(5,7,12,0.9)_100%)] opacity-[0.58]"
+          className="pointer-events-none absolute inset-0 z-[2] bg-[radial-gradient(ellipse_at_58%_36%,rgba(5,7,12,0.2)_0%,rgba(5,7,12,0.55)_55%,rgba(5,7,12,0.82)_100%)]"
           aria-hidden
         />
 
@@ -137,57 +144,55 @@ export function OpeningScene() {
           aria-hidden
         />
 
-        {/* Compact toast notification */}
-        <div
-          data-film="toast"
-          className="absolute top-[12%] right-4 left-4 z-[4] border border-[var(--color-signal)]/45 bg-black/65 p-3 backdrop-blur-md sm:left-auto sm:w-[min(320px,42vw)] sm:p-4 md:top-[15%] md:right-[8%]"
-        >
-          <div className="flex items-center gap-2">
-            <span className="h-2 w-2 animate-pulse bg-[var(--color-signal)]" />
-            <p className="font-mono text-[9px] tracking-[0.22em] text-[var(--color-signal)] uppercase">
-              Signal · New opportunity
+        <SceneStage>
+          <div
+            data-film="toast"
+            className="w-full border border-[var(--color-signal)]/45 bg-black/70 p-3 opacity-0 backdrop-blur-md md:p-4"
+          >
+            <div className="flex items-center gap-2">
+              <span className="h-2 w-2 animate-pulse bg-[var(--color-signal)]" />
+              <p className="font-mono text-[9px] tracking-[0.22em] text-[var(--color-signal)] uppercase">
+                Signal · New opportunity
+              </p>
+            </div>
+            <p className="mt-2 font-display text-base text-white md:text-lg">
+              {STORY_PROJECT.title}
             </p>
+            <p className="mt-1 text-xs text-white/55">{STORY_PROJECT.client}</p>
           </div>
-          <p className="mt-2 font-display text-base text-white sm:text-lg">
-            {STORY_PROJECT.title}
-          </p>
-          <p className="mt-1 text-xs text-white/55">
-            {STORY_PROJECT.client}
-          </p>
-        </div>
 
-        {/* Expanded project brief */}
-        <div
-          data-film="brief"
-          className="absolute top-[10%] right-4 left-4 z-[5] sm:left-auto sm:w-[min(420px,52vw)] md:top-[12%] md:right-[6%]"
-        >
-          <ProjectBrief />
-        </div>
+          <div
+            data-film="brief"
+            className="pointer-events-none absolute inset-0 opacity-0"
+          >
+            <ProjectBrief compact className="h-full" />
+          </div>
+        </SceneStage>
 
-        <div className="relative z-[6] w-full px-5 pb-16 md:px-10 md:pb-0 lg:px-16">
+        <ScenePanel>
           <div className="mx-auto max-w-4xl">
-            <p className="mb-4 font-mono text-[10px] tracking-[0.28em] text-white/40 uppercase">
+            <p className="mb-2 font-mono text-[10px] tracking-[0.28em] text-white/40 uppercase">
               {content.eyebrow}
             </p>
             <h1 id="scene-threshold-title" className="sr-only">
               {content.title}
             </h1>
-            <div className="space-y-2 md:space-y-3">
+            <div className="space-y-1 md:space-y-3">
               <p
                 data-film="line"
-                className="origin-left font-display text-[clamp(1.65rem,5.2vw,3.6rem)] leading-[1.05] tracking-[-0.02em] text-[var(--color-paper)]"
+                className="origin-left font-display text-[clamp(1.25rem,5.5vw,3.6rem)] leading-[1.08] tracking-[-0.02em] text-[var(--color-paper)] opacity-0"
               >
                 {content.line1}
               </p>
               <p
                 data-film="line"
-                className="origin-left font-display text-[clamp(1.65rem,5.2vw,3.6rem)] leading-[1.05] tracking-[-0.02em] text-[var(--color-paper)]"
+                className="origin-left font-display text-[clamp(1.25rem,5.5vw,3.6rem)] leading-[1.08] tracking-[-0.02em] text-[var(--color-paper)] opacity-0"
               >
                 {content.line2}
               </p>
               <p
                 data-film="line"
-                className="origin-left font-display text-[clamp(1.65rem,5.2vw,3.6rem)] leading-[1.05] tracking-[-0.02em] text-[var(--color-daylight)]"
+                className="origin-left font-display text-[clamp(1.25rem,5.5vw,3.6rem)] leading-[1.08] tracking-[-0.02em] text-[var(--color-daylight)] opacity-0"
               >
                 {content.line3}
               </p>
@@ -195,14 +200,14 @@ export function OpeningScene() {
 
             <p
               data-film="support"
-              className="mt-6 max-w-xl text-base leading-relaxed text-white/75 md:mt-8 md:text-lg"
+              className="mt-3 hidden max-w-xl text-base leading-relaxed text-white/75 opacity-0 md:mt-8 md:block md:text-lg"
             >
               {content.body}
             </p>
 
             <div
               data-film="meta"
-              className="mt-5 flex flex-wrap items-center gap-3 font-mono text-[10px] tracking-[0.2em] text-white/55 uppercase md:text-[11px]"
+              className="mt-3 hidden flex-wrap items-center gap-2 font-mono text-[9px] tracking-[0.16em] text-white/55 uppercase opacity-0 md:mt-5 md:flex md:gap-3 md:text-[11px]"
             >
               <span className="border border-white/20 px-2 py-1">
                 Developer · me
@@ -215,13 +220,16 @@ export function OpeningScene() {
               </span>
             </div>
 
-            <div data-film="cta" className="mt-8 flex flex-wrap gap-3">
+            <div
+              data-film="cta"
+              className="mt-4 flex flex-wrap gap-2 opacity-0 md:mt-8 md:gap-3"
+            >
               <button
                 type="button"
                 onClick={() => scrollToScene("partner")}
                 className={cn(
-                  "pointer-events-auto border border-[var(--color-paper)] bg-[var(--color-paper)] px-5 py-3",
-                  "font-mono text-[11px] tracking-[0.2em] text-[var(--color-void)] uppercase",
+                  "pointer-events-auto border border-[var(--color-paper)] bg-[var(--color-paper)] px-4 py-2.5",
+                  "font-mono text-[10px] tracking-[0.2em] text-[var(--color-void)] uppercase md:px-5 md:py-3 md:text-[11px]",
                   "hover:bg-transparent hover:text-[var(--color-paper)]",
                 )}
               >
@@ -230,16 +238,16 @@ export function OpeningScene() {
               <button
                 type="button"
                 onClick={() => scrollToScene("split")}
-                className="pointer-events-auto border border-white/25 px-4 py-3 font-mono text-[10px] tracking-[0.18em] text-white/55 uppercase hover:text-white"
+                className="pointer-events-auto border border-white/25 px-3 py-2.5 font-mono text-[10px] tracking-[0.18em] text-white/55 uppercase hover:text-white md:px-4 md:py-3"
               >
                 Skip story
               </button>
             </div>
           </div>
-        </div>
+        </ScenePanel>
 
         <ScrollCue label={content.cue} />
-      </div>
+      </ScenePin>
     </section>
   );
 }

@@ -10,7 +10,7 @@ export const ScrollCue = forwardRef<HTMLDivElement, ScrollCueProps>(
       <div
         ref={ref}
         data-opening="scroll-cue"
-        className="pointer-events-none absolute inset-x-0 bottom-8 z-20 flex flex-col items-center gap-3 opacity-0 md:bottom-10"
+        className="pointer-events-none absolute inset-x-0 bottom-[max(1.25rem,env(safe-area-inset-bottom))] z-20 flex flex-col items-center gap-2 opacity-0 md:bottom-10 md:gap-3"
         aria-hidden
       >
         <p className="font-mono text-[10px] tracking-[0.32em] text-white/55 uppercase md:text-[11px]">

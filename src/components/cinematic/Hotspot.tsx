@@ -56,7 +56,7 @@ export function Hotspot({
       <div
         id={id}
         hidden={!open}
-        className="absolute top-full left-0 z-20 mt-2 w-56 border border-white/15 bg-black/85 p-3 text-left text-xs leading-relaxed text-white/75 shadow-xl backdrop-blur-md"
+        className="absolute top-full left-0 z-20 mt-2 w-[min(14rem,calc(100vw-2rem))] border border-white/15 bg-black/85 p-3 text-left text-xs leading-relaxed text-white/75 shadow-xl backdrop-blur-md"
       >
         {detail}
       </div>

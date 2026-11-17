@@ -4,6 +4,7 @@ import { useRef } from "react";
 import { useCinematicScene } from "@/hooks/useCinematicScene";
 import { FilmPlate } from "@/components/cinematic/FilmPlate";
 import { Hotspot } from "@/components/cinematic/Hotspot";
+import { ScenePin, ScenePanel } from "@/components/cinematic/ScenePin";
 import { ProjectBrief } from "@/components/sim/ProjectBrief";
 import { FILM_ASSETS } from "@/lib/assets";
 import { SCENES } from "@/lib/content";
@@ -11,8 +12,7 @@ import { SCENES } from "@/lib/content";
 const content = SCENES.find((s) => s.id === "partner")!;
 
 /**
- * Event 2 — The missing partner.
- * Empty chair → camera pullback → daylight room reveal → desks connect.
+ * Event 2 — The missing partner. Same room-reveal film on all viewports.
  */
 export function PartnerScene() {
   const rootRef = useRef<HTMLElement>(null);
@@ -23,9 +23,9 @@ export function PartnerScene() {
     rootRef,
     pinRef,
     endDesktop: "+=300%",
-    endMobile: "+=200%",
+    endMobile: "+=160%",
     scrubDesktop: 0.72,
-    scrubMobile: 0.5,
+    scrubMobile: true,
     build: ({ gsap: g, q, targets, isDesktop }, tl) => {
       const empty = q("[data-film='empty']");
       const partner = q("[data-film='partner']");
@@ -39,44 +39,41 @@ export function PartnerScene() {
       const brief = q("[data-film='brief']");
       const copy = targets(title, body);
 
-      g.set(empty, { opacity: 1, scale: 1.12 });
+      g.set(empty, { opacity: 1, scale: 1.1 });
       g.set(partner, {
         opacity: 0,
         clipPath: isDesktop ? "inset(0 0 0 100%)" : "inset(100% 0 0 0)",
       });
       g.set(stage, { rotateY: 0, scale: 1.04 });
-      g.set(copy, { opacity: 0, y: 28 });
-      g.set(hotspots, { opacity: 0, y: 16 });
+      g.set(copy, { opacity: 0, y: 18 });
+      g.set(hotspots, { opacity: 0, y: 12 });
       g.set(bridge, { scaleX: 0, opacity: 0, transformOrigin: "left center" });
       g.set(capDev, { opacity: 0, x: -12 });
       g.set(capPartner, { opacity: 0, x: 12 });
-      g.set(brief, { opacity: 0, y: 16 });
+      g.set(brief, { opacity: 0, y: 12 });
 
-      // Pull back from empty chair
-      tl.to(empty, { scale: 1, duration: 0.7 }, 0);
-      tl.to(stage, { scale: 1, duration: 0.7 }, 0);
-      tl.to(copy, { opacity: 1, y: 0, stagger: 0.1, duration: 0.5 }, 0.25);
-      tl.to(brief, { opacity: 1, y: 0, duration: 0.4 }, 0.45);
+      tl.to(empty, { scale: 1, duration: 0.6 }, 0);
+      tl.to(stage, { scale: 1, duration: 0.6 }, 0);
+      tl.to(copy, { opacity: 1, y: 0, stagger: 0.08, duration: 0.4 }, 0.2);
+      tl.to(brief, { opacity: 1, y: 0, duration: 0.35 }, 0.4);
 
-      // Second room reveals
       tl.to(
         partner,
-        { opacity: 1, clipPath: "inset(0% 0% 0% 0%)", duration: 1.2 },
-        0.7,
+        { opacity: 1, clipPath: "inset(0% 0% 0% 0%)", duration: 1.1 },
+        0.6,
       );
-      tl.to(empty, { opacity: 0.35, duration: 0.85 }, 0.85);
-      tl.to(capDev, { opacity: 1, x: 0, duration: 0.4 }, 1.35);
-      tl.to(capPartner, { opacity: 1, x: 0, duration: 0.4 }, 1.5);
-      tl.to(hotspots, { opacity: 1, y: 0, duration: 0.45 }, 1.65);
+      tl.to(empty, { opacity: 0.35, duration: 0.8 }, 0.75);
+      tl.to(capDev, { opacity: 1, x: 0, duration: 0.35 }, 1.2);
+      tl.to(capPartner, { opacity: 1, x: 0, duration: 0.35 }, 1.35);
+      tl.to(hotspots, { opacity: 1, y: 0, duration: 0.4 }, 1.45);
 
-      // Rooms align; signal bridge connects desks
       if (isDesktop) {
-        tl.to(stage, { rotateY: -7, duration: 0.75 }, 1.9);
-        tl.to(empty, { xPercent: -5, duration: 0.75 }, 1.9);
-        tl.to(partner, { xPercent: 4, duration: 0.75 }, 1.9);
+        tl.to(stage, { rotateY: -7, duration: 0.7 }, 1.8);
+        tl.to(empty, { xPercent: -5, duration: 0.7 }, 1.8);
+        tl.to(partner, { xPercent: 4, duration: 0.7 }, 1.8);
       }
-      tl.to(bridge, { scaleX: 1, opacity: 1, duration: 0.6 }, 2.15);
-      tl.to(partner, { scale: isDesktop ? 1.08 : 1.04, duration: 0.55 }, 2.4);
+      tl.to(bridge, { scaleX: 1, opacity: 1, duration: 0.5 }, 2);
+      tl.to(partner, { scale: isDesktop ? 1.08 : 1.04, duration: 0.45 }, 2.25);
     },
   });
 
@@ -88,9 +85,10 @@ export function PartnerScene() {
       aria-labelledby="scene-partner-title"
       className="relative"
     >
-      <div
+      <ScenePin
         ref={pinRef}
-        className="relative flex h-[100svh] w-full items-end overflow-hidden bg-[var(--color-ink)] [perspective:1600px] md:items-center"
+        className="bg-[var(--color-ink)] [perspective:1600px]"
+        align="end"
       >
         <div
           data-film="stage"
@@ -100,6 +98,8 @@ export function PartnerScene() {
             <FilmPlate
               src={FILM_ASSETS.emptyChair.src}
               alt={FILM_ASSETS.emptyChair.alt}
+              focus={FILM_ASSETS.emptyChair.focus}
+              focusMobile={FILM_ASSETS.emptyChair.focusMobile}
               overlay="heavy"
             />
           </div>
@@ -111,6 +111,8 @@ export function PartnerScene() {
             <FilmPlate
               src={FILM_ASSETS.partnerDay.src}
               alt={FILM_ASSETS.partnerDay.alt}
+              focus={FILM_ASSETS.partnerDay.focus}
+              focusMobile={FILM_ASSETS.partnerDay.focusMobile}
               overlay="left"
             />
           </div>
@@ -135,7 +137,7 @@ export function PartnerScene() {
           Partner · owns accounts · leads interviews
         </p>
 
-        <div className="relative z-[5] w-full px-5 pb-14 md:px-10 lg:px-16">
+        <ScenePanel>
           <div className="max-w-xl">
             <p className="font-mono text-[10px] tracking-[0.28em] text-[var(--color-daylight)] uppercase">
               {content.eyebrow}
@@ -143,19 +145,25 @@ export function PartnerScene() {
             <h2
               id="scene-partner-title"
               data-film="title"
-              className="mt-3 font-display text-[clamp(1.8rem,4.5vw,3.1rem)] leading-[1.08] text-white"
+              className="mt-2 font-display text-[clamp(1.35rem,5vw,3.1rem)] leading-[1.08] text-white opacity-0"
             >
               {content.title}
-              <span className="mt-2 block text-[var(--color-daylight)]">
+              <span
+                data-film="body"
+                className="mt-2 block text-[var(--color-daylight)] opacity-0"
+              >
                 {content.body}
               </span>
             </h2>
 
-            <div data-film="brief" className="mt-5 max-w-sm">
+            <div data-film="brief" className="mt-3 max-w-sm md:mt-5">
               <ProjectBrief compact />
             </div>
 
-            <div data-film="hotspots" className="mt-8 flex flex-wrap gap-3">
+            <div
+              data-film="hotspots"
+              className="mt-4 flex flex-wrap gap-2 md:mt-8 md:gap-3"
+            >
               <Hotspot
                 tone="tungsten"
                 label="Code"
@@ -178,8 +186,8 @@ export function PartnerScene() {
               />
             </div>
           </div>
-        </div>
-      </div>
+        </ScenePanel>
+      </ScenePin>
     </section>
   );
 }

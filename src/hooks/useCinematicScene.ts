@@ -42,7 +42,7 @@ type UseCinematicSceneOptions = {
   endDesktop?: string;
   endMobile?: string;
   scrubDesktop?: number;
-  scrubMobile?: number;
+  scrubMobile?: number | boolean;
   build: (
     ctx: CinematicBuildContext,
     tl: CinematicTimeline,
@@ -51,23 +51,24 @@ type UseCinematicSceneOptions = {
 };
 
 /**
- * Shared pin + matchMedia + progress lifecycle for cinematic scenes.
- * Cleans up with mm.revert() on unmount / breakpoint change.
+ * Shared pin + scrub lifecycle for cinematic scenes.
+ * Avoids refresh-on-resize (mobile URL bar) which kills later pins mid-scroll.
  */
 export function useCinematicScene({
   id,
   rootRef,
   pinRef,
   endDesktop = "+=280%",
-  endMobile = "+=200%",
+  endMobile = "+=170%",
   scrubDesktop = 0.7,
-  scrubMobile = 0.5,
+  scrubMobile = true,
   build,
   onReducedMotion,
 }: UseCinematicSceneOptions) {
   const { setActiveSceneId, setSceneProgress } = useExperience();
   const buildRef = useRef(build);
   const reducedRef = useRef(onReducedMotion);
+  const lastProgressRef = useRef(-1);
 
   useEffect(() => {
     buildRef.current = build;
@@ -75,79 +76,123 @@ export function useCinematicScene({
   }, [build, onReducedMotion]);
 
   useEffect(() => {
-    const root = rootRef.current;
-    const pin = pinRef.current;
-    if (!root || !pin) return;
+    let cancelled = false;
+    let ctx: gsap.Context | null = null;
+    let raf = 0;
+    let tries = 0;
+    let width = 0;
 
-    const gsapApi = registerGsapPlugins();
-    const mm = gsapApi.matchMedia();
-    const q = gsapApi.utils.selector(root);
-
-    const report = (value: number) => {
-      setActiveSceneId(id);
+    const reportProgress = (value: number) => {
+      if (Math.abs(value - lastProgressRef.current) < 0.008) return;
+      lastProgressRef.current = value;
       setSceneProgress(id, value);
     };
 
-    mm.add(
-      {
-        isDesktop: "(min-width: 768px)",
-        reduceMotion: "(prefers-reduced-motion: reduce)",
-      },
-      (context) => {
-        const conditions = context.conditions as {
-          isDesktop: boolean;
-          reduceMotion: boolean;
-        };
-        const isDesktop = Boolean(conditions.isDesktop);
-        const reduceMotion = Boolean(conditions.reduceMotion);
+    const arm = () => {
+      if (cancelled) return;
+      const root = rootRef.current;
+      const pin = pinRef.current;
+      if (!root || !pin) {
+        if (tries++ < 60) raf = requestAnimationFrame(arm);
+        return;
+      }
 
-        const buildCtx: CinematicBuildContext = {
-          gsap: gsapApi,
-          root,
-          pin,
-          q,
-          targets: flattenTargets,
-          isDesktop,
-          reduceMotion,
-        };
+      ctx?.revert();
+      ctx = null;
+      lastProgressRef.current = -1;
 
-        if (reduceMotion) {
-          reducedRef.current?.(buildCtx);
-          report(1);
-          return;
-        }
+      const gsapApi = registerGsapPlugins();
+      const isDesktop = window.matchMedia("(min-width: 768px)").matches;
+      const reduceMotion = window.matchMedia(
+        "(prefers-reduced-motion: reduce)",
+      ).matches;
+      width = window.innerWidth;
+      const q = gsapApi.utils.selector(root);
 
+      const buildCtx: CinematicBuildContext = {
+        gsap: gsapApi,
+        root,
+        pin,
+        q,
+        targets: flattenTargets,
+        isDesktop,
+        reduceMotion,
+      };
+
+      if (reduceMotion) {
+        reducedRef.current?.(buildCtx);
+        setActiveSceneId(id);
+        setSceneProgress(id, 1);
+        return;
+      }
+
+      ctx = gsapApi.context(() => {
         const tl = gsapApi.timeline({
           defaults: { ease: "none" },
           scrollTrigger: {
+            id: `scene-${id}`,
             trigger: root,
             start: "top top",
             end: isDesktop ? endDesktop : endMobile,
             pin,
+            // Transform pins + pan-y touch-action keep native finger scroll on phones.
             scrub: isDesktop ? scrubDesktop : scrubMobile,
-            anticipatePin: 1,
+            anticipatePin: isDesktop ? 1 : 0,
             invalidateOnRefresh: true,
-            onUpdate: (self) => report(self.progress),
+            fastScrollEnd: isDesktop,
+            preventOverlaps: false,
+            onUpdate: (self) => reportProgress(self.progress),
             onEnter: () => setActiveSceneId(id),
             onEnterBack: () => setActiveSceneId(id),
+            onToggle: (self) => {
+              if (self.isActive) setActiveSceneId(id);
+            },
           },
         });
 
-        const extraCleanup = buildRef.current(buildCtx, tl);
-        return () => {
-          extraCleanup?.();
-        };
-      },
-    );
+        buildRef.current(buildCtx, tl);
+      }, root);
+    };
 
-    const refresh = () => ScrollTrigger.refresh();
-    const raf = requestAnimationFrame(refresh);
-    window.addEventListener("load", refresh);
+    arm();
+
+    // One shared refresh after all scene hooks have armed.
+    const refreshRaf = requestAnimationFrame(() => {
+      if (!cancelled) ScrollTrigger.refresh();
+    });
+
+    const onLoad = () => ScrollTrigger.refresh();
+
+    // Only re-arm when width actually changes (rotate / desktop crossover).
+    // Ignore height-only resizes from the mobile browser chrome.
+    const onResize = () => {
+      if (cancelled) return;
+      const nextWidth = window.innerWidth;
+      if (Math.abs(nextWidth - width) < 2) return;
+      width = nextWidth;
+      tries = 0;
+      arm();
+      requestAnimationFrame(() => ScrollTrigger.refresh());
+    };
+
+    const onOrientation = () => {
+      tries = 0;
+      arm();
+      requestAnimationFrame(() => ScrollTrigger.refresh());
+    };
+
+    window.addEventListener("load", onLoad);
+    window.addEventListener("resize", onResize);
+    window.addEventListener("orientationchange", onOrientation);
 
     return () => {
+      cancelled = true;
       cancelAnimationFrame(raf);
-      window.removeEventListener("load", refresh);
-      mm.revert();
+      cancelAnimationFrame(refreshRaf);
+      window.removeEventListener("load", onLoad);
+      window.removeEventListener("resize", onResize);
+      window.removeEventListener("orientationchange", onOrientation);
+      ctx?.revert();
     };
   }, [
     id,

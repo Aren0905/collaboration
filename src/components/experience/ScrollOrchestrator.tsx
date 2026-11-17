@@ -4,11 +4,18 @@ import { useEffect, useRef } from "react";
 import Lenis from "lenis";
 import { useExperience } from "@/components/experience/ExperienceContext";
 import { registerGsapPlugins, ScrollTrigger } from "@/lib/gsap";
-import { LENIS_OPTIONS } from "@/lib/motion";
+import { LENIS_OPTIONS, shouldUseLenis } from "@/lib/motion";
+
+function reportNativeProgress(setProgress: (value: number) => void) {
+  const max = document.documentElement.scrollHeight - window.innerHeight;
+  const next = max > 0 ? window.scrollY / max : 0;
+  document.documentElement.style.setProperty("--story-progress", String(next));
+  setProgress(next);
+}
 
 /**
- * Single scroll controller: Lenis (window) + GSAP ScrollTrigger update bridge.
- * Disabled when prefers-reduced-motion is active to avoid competing controllers.
+ * Desktop: Lenis + ScrollTrigger.
+ * Mobile: pure native touch scroll — no normalizeScroll (it can lock pan-y).
  */
 export function ScrollOrchestrator() {
   const { reducedMotion, setProgress } = useExperience();
@@ -16,18 +23,47 @@ export function ScrollOrchestrator() {
 
   useEffect(() => {
     if (reducedMotion) {
-      const onScroll = () => {
-        const max = document.documentElement.scrollHeight - window.innerHeight;
-        const next = max > 0 ? window.scrollY / max : 0;
-        document.documentElement.style.setProperty("--story-progress", String(next));
-        setProgress(next);
-      };
+      const onScroll = () => reportNativeProgress(setProgress);
       onScroll();
       window.addEventListener("scroll", onScroll, { passive: true });
       return () => window.removeEventListener("scroll", onScroll);
     }
 
     const gsap = registerGsapPlugins();
+    const useLenis = shouldUseLenis();
+
+    // Guarantee vertical finger scrolling even if a library mutates touch-action.
+    document.documentElement.style.touchAction = "pan-y";
+    document.body.style.touchAction = "pan-y";
+
+    if (!useLenis) {
+      let lastWidth = window.innerWidth;
+
+      const onScroll = () => {
+        ScrollTrigger.update();
+        reportNativeProgress(setProgress);
+      };
+      onScroll();
+      window.addEventListener("scroll", onScroll, { passive: true });
+
+      const onResize = () => {
+        const nextWidth = window.innerWidth;
+        if (Math.abs(nextWidth - lastWidth) < 2) return;
+        lastWidth = nextWidth;
+        ScrollTrigger.refresh();
+      };
+      window.addEventListener("resize", onResize);
+      window.addEventListener("orientationchange", () => ScrollTrigger.refresh());
+
+      requestAnimationFrame(() => ScrollTrigger.refresh());
+      return () => {
+        window.removeEventListener("scroll", onScroll);
+        window.removeEventListener("resize", onResize);
+        document.documentElement.style.touchAction = "";
+        document.body.style.touchAction = "";
+      };
+    }
+
     const lenis = new Lenis(LENIS_OPTIONS);
     lenisRef.current = lenis;
 
@@ -60,7 +96,8 @@ export function ScrollOrchestrator() {
       gsap.ticker.remove(ticker);
       lenis.destroy();
       lenisRef.current = null;
-      // Scene-level ScrollTriggers clean up via their own gsap.context().revert()
+      document.documentElement.style.touchAction = "";
+      document.body.style.touchAction = "";
       ScrollTrigger.refresh();
     };
   }, [reducedMotion, setProgress]);
